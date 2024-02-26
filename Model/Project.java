@@ -2,7 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 
-public class Proyect {
+public class Project {
     private String name;
     private String description;
     private String proyectCreator;

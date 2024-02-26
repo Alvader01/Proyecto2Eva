@@ -1,5 +1,5 @@
 package Interfaces.Model;
 
-public interface ITask {
+public interface ITask extends IManager {
     //Hola guapa
 }

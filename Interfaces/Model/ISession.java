@@ -1,5 +1,5 @@
 package Interfaces.Model;
 
-public interface ISession {
+public interface ISession extends IManager {
     //Hola guapa
 }
