@@ -13,6 +13,8 @@ public interface IManager {
     void addCollaborator(Project project, User collaborator);
     void createTask(Project project, String name, String description, LocalDate startDate, LocalDate endDate, User assignee);
     void changeTaskStatus(Task task, String newStatus, String comment);
-
+    void saveProject(Project project);
     User getLoggedInUser();
+    void removeCollaborator(Project project, User collaborator);
+    void deleteTask(Task task);
 }
