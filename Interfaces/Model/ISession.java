@@ -1,5 +1,10 @@
 package Interfaces.Model;
 
-public interface ISession extends IManager {
-    //Hola guapa
+import Model.User;
+
+public interface ISession{
+    void createUser(String name, String username, String password, String email);
+    User login(String username, String password);
+    User getLoggedInUser();
+
 }

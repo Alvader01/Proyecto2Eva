@@ -1,5 +1,8 @@
 package Interfaces.Model;
 
-public interface ITask extends IManager {
-    //Hola guapa
+import Model.Task;
+
+public interface ITask {
+    void addComment(Task task, String comment);
+
 }

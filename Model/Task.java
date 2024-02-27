@@ -1,31 +1,29 @@
 package Model;
 
-import java.time.LocalDate;
+import Interfaces.Model.ITask;
 
-public class Task {
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+public class Task implements ITask {
     private String name;
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
     private String collaboratorInCharge;
     private String state;
+    private List<String> comments;
 
 
-    public Task(String name, String description, LocalDate startDate, LocalDate endDate, String collaboratorInCharge, String state) {
+    public Task(String name, String description, LocalDate startDate, LocalDate endDate, String collaboratorInCharge, String state, List<String> comments) {
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
         this.collaboratorInCharge = collaboratorInCharge;
         this.state = state;
-    }
-
-    public String getState() {
-        return state;
-    }
-
-    public void setState(String state) {
-        this.state = state;
+        this.comments = comments;
     }
 
     public String getName() {
@@ -68,19 +66,36 @@ public class Task {
         this.collaboratorInCharge = collaboratorInCharge;
     }
 
-    @Override
-    public String toString() {
-        return "Task{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", startDate=" + startDate +
-                ", endDate=" + endDate +
-                ", collaboratorInCharge='" + collaboratorInCharge + '\'' +
-                ", state='" + state + '\'' +
-                '}';
+    public String getState() {
+        return state;
     }
 
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public List<String> getComments() {
+        return comments;
+    }
+
+    public void setComments(List<String> comments) {
+        this.comments = comments;
+    }
+
+
+    public void addComment(String comment) {
+        if (comments == null) {
+            comments = new ArrayList<>();
+        }
+        comments.add(comment);
+    }
+
+    @Override
+    public void addComment(Task task, String comment) {
+
+    }
 }
+
 
 
 
