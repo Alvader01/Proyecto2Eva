@@ -1,6 +1,7 @@
 package Model;
 
 import Interfaces.Model.IManager;
+import Model.Users.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

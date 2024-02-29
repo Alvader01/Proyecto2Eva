@@ -1,6 +1,6 @@
 package Interfaces.Model;
 
-import Model.User;
+import Model.Users.User;
 
 import java.util.List;
 

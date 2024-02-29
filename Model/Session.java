@@ -1,8 +1,8 @@
 package Model;
 
 import Interfaces.Model.ISession;
+import Model.Users.User;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
