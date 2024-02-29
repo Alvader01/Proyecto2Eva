@@ -1,26 +1,23 @@
 package Model.Users;
 
-import Interfaces.Model.IUser;
+import java.util.Objects;
 
-import java.util.List;
-
-public class User implements IUser {
+public class User {
     private String name;
-    private String user;
+    private String username;
     private String email;
     private String password;
 
-
-    public User(String name, String user, String email, String password) {
+    public User(String name, String username, String email, String password) {
         this.name = name;
-        this.user = user;
+        this.username = username;
         this.email = email;
         this.password = password;
 
     }
 
-    public User(){
-        this("","","","");
+    public User() {
+        this("", "", "", "");
     }
 
     public String getName() {
@@ -31,12 +28,12 @@ public class User implements IUser {
         this.name = name;
     }
 
-    public String getUser() {
-        return user;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUsername(String user) {
+        this.username = user;
     }
 
     public String getEmail() {
@@ -56,30 +53,10 @@ public class User implements IUser {
     }
 
     @Override
-    public void createUser(String name, String username, String password, String email) {
-
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user1 = (User) o;
+        return Objects.equals(username, user1.username);
     }
-
-    @Override
-    public boolean deleteUser(User user) {
-        return false;
-    }
-
-    @Override
-    public void updatePassword(User user, String newPassword) {
-    }
-
-    @Override
-    public List<User> getAllUsers() {
-        return null;
-    }
-
-    @Override
-    public boolean isEmailUnique(String email) {
-        return false;
-    }
-
-
-
-
 }
