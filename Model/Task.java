@@ -82,18 +82,21 @@ public class Task implements ITask {
         this.comments = comments;
     }
 
-
-    public void addComment(String comment) {
+    /**
+     * Este metodo crea los comentarios de las tareas
+     * @param comment
+     */
+    @Override
+    public void createComment(Task task,String comment) {
         if (comments == null) {
             comments = new ArrayList<>();
         }
         comments.add(comment);
+        //Añadir comentario a una tarea en especifico
     }
 
-    @Override
-    public void addComment(Task task, String comment) {
 
-    }
+
 }
 
 

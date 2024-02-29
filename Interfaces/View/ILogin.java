@@ -2,7 +2,7 @@ package Interfaces.View;
 
 public interface ILogin {
 
-    public String showUser();
+    public void showUser();
 
-    public String showPassword();
+    public void showPassword();
 }
