@@ -10,12 +10,11 @@ public class Session implements ISession {
     private static Session instance;
     private User loggedInUser;
     private final List<User> users;
-    private final List<Project> projects;
 
 
     private Session() {
         this.users = new ArrayList<>();
-        this.projects = new ArrayList<>();
+
     }
 
     public static Session getInstance() {
@@ -25,13 +24,6 @@ public class Session implements ISession {
         return instance;
     }
 
-
-    @Override
-    public void createUser(String name, String username, String password, String email) {
-        User newUser = new User(name, username, password, email);
-        users.add(newUser);
-        loggedInUser = newUser;
-    }
 
     @Override
     public User login(String username, String password) {

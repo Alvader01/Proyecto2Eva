@@ -56,13 +56,17 @@ public class User implements IUser {
     }
 
     @Override
+    public void createUser(String name, String username, String password, String email) {
+
+    }
+
+    @Override
     public boolean deleteUser(User user) {
         return false;
     }
 
     @Override
     public void updatePassword(User user, String newPassword) {
-
     }
 
     @Override
@@ -75,8 +79,7 @@ public class User implements IUser {
         return false;
     }
 
-    @Override
-    public void addUser(User user) {
 
-    }
+
+
 }

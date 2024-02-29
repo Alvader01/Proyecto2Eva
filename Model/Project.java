@@ -5,13 +5,13 @@ import java.util.ArrayList;
 public class Project {
     private String name;
     private String description;
-    private String proyectCreator;
+    private String projectCreator;
     private ArrayList<Task> tasks;
 
-    public Project(String name, String description, String proyectCreator, ArrayList<Task> tasks) {
+    public Project(String name, String description, String projectCreator, ArrayList<Task> tasks) {
         this.name = name;
         this.description = description;
-        this.proyectCreator = proyectCreator;
+        this.projectCreator = projectCreator;
         this.tasks = tasks;
     }
 
@@ -31,12 +31,12 @@ public class Project {
         this.description = description;
     }
 
-    public String getProyectCreator() {
-        return proyectCreator;
+    public String getProjectCreator() {
+        return projectCreator;
     }
 
-    public void setProyectCreator(String proyectCreator) {
-        this.proyectCreator = proyectCreator;
+    public void setProjectCreator(String projectCreator) {
+        this.projectCreator = projectCreator;
     }
 
     public ArrayList<Task> getTasks() {
