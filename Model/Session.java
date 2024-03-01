@@ -14,7 +14,6 @@ public class Session implements ISession {
 
     private Session() {
         this.users = new ArrayList<>();
-
     }
 
     public static Session getInstance() {
