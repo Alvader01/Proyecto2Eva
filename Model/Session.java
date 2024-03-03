@@ -23,6 +23,13 @@ public class Session implements ISession {
         return _instance;
     }
 
+    /**
+     * Iniciar sesion de usuario
+     *
+     * @param username El username del usuario
+     * @param password La contrasena del usuario
+     * @return El usuario logueado
+     */
     @Override
     public User login(String username, String password) throws NoSuchAlgorithmException {
         User foundUser = null;
@@ -35,6 +42,11 @@ public class Session implements ISession {
         return foundUser;
     }
 
+    /**
+     * Obtener el usuario logueado
+     *
+     * @return El usuario logueado
+     */
     @Override
     public User getLoggedInUser() {
         return loggedInUser;

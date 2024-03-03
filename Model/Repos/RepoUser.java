@@ -123,6 +123,8 @@ public class RepoUser extends Repository<User, String> {
 
     /**
      * Guardar la lista de usuarios en un fichero
+     *
+     * @return true si se ha guardado con exito, false si no
      */
     public boolean save() {
         return save(FILENAME);
