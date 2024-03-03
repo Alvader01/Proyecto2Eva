@@ -54,6 +54,12 @@ public class User {
         this.password = Security.hashPassword(password);
     }
 
+    /**
+     * Comprueba si la contraseña obtenida es la misma que la almacenada despues de hashear
+     *
+     * @param  password  la contraseña a comprobar
+     * @return           true si la contraseña es la misma, false en caso contrario
+     */
     public boolean isMyPassword(String password) throws NoSuchAlgorithmException {
         return this.password.equals(Security.hashPassword(password));
     }
