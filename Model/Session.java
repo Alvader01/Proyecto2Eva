@@ -1,46 +1,42 @@
 package Model;
 
 import Interfaces.Model.ISession;
-import Model.Users.User;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.security.NoSuchAlgorithmException;
+import java.util.HashSet;
+import java.util.Set;
 
 public class Session implements ISession {
-    private static Session instance;
+    private static Session _instance;
     private User loggedInUser;
-    private final List<User> users;
+    private Set<User> users;
 
 
     private Session() {
-        this.users = new ArrayList<>();
+        this.users = new HashSet<>();
     }
 
     public static Session getInstance() {
-        if (instance == null) {
-            instance = new Session();
+        if (_instance == null) {
+            _instance = new Session();
         }
-        return instance;
+        return _instance;
     }
 
-
     @Override
-    public User login(String username, String password) {
+    public User login(String username, String password) throws NoSuchAlgorithmException {
         User foundUser = null;
-
         for (User user : users) {
-            if (user.getName().equals(username) && user.getPassword().equals(password)) {
+            if (user.getName().equals(username) && user.isMyPassword(password)) {
                 foundUser = user;
             }
         }
-
         loggedInUser = foundUser;
         return foundUser;
     }
 
-
     @Override
     public User getLoggedInUser() {
-        return null;
+        return loggedInUser;
     }
 }

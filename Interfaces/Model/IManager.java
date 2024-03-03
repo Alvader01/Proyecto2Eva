@@ -1,7 +1,7 @@
 package Interfaces.Model;
 import Model.Project;
 import Model.Task;
-import Model.Users.User;
+import Model.User;
 
 import java.time.LocalDate;
 
