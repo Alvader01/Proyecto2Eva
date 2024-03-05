@@ -36,4 +36,6 @@ public abstract class Repository<T, K> implements Serializable {
     public abstract T update(T data);
 
     public abstract boolean delete(K username);
+
+    public abstract boolean save();
 }
