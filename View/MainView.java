@@ -1,9 +1,14 @@
 package View;
 
+import Interfaces.View.IMainView;
+
 import java.util.Scanner;
 
-public class MainView {
+public class MainView implements IMainView {
 
+    /**
+     * Este metodo muestra el print de ProjectFalillo, que va en el menu principal.
+     */
     public void showMainView(){
         System.out.println("******************************************************************************");
         System.out.println(" ___                 _              _     ___          _   _   _   _       ");

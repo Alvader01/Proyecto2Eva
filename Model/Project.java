@@ -1,8 +1,11 @@
 package Model;
 
-import java.util.ArrayList;
+import Interfaces.Model.IProject;
 
-public class Project {
+import java.util.ArrayList;
+import java.util.Iterator;
+
+public class Project implements IProject {
     private String name;
     private String description;
     private String projectCreator;
@@ -45,5 +48,18 @@ public class Project {
 
     public void setTasks(ArrayList<Task> tasks) {
         this.tasks = tasks;
+    }
+
+    public Iterator<Task> iterator() {
+        return tasks.iterator();
+    }
+
+    @Override
+    public String toString() {
+        return "Project{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", projectCreator='" + projectCreator + '\'' +
+                '}';
     }
 }
