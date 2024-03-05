@@ -1,4 +1,4 @@
 package Model.Repos;
 
-public class RepoProject {
+public class RepoProject implements {
 }

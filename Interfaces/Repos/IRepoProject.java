@@ -3,7 +3,7 @@ package Interfaces.Repos;
 import Model.Project;
 import Model.User;
 
-public interface RepoProject {
+public interface IRepoProject {
     void createProject(String name, String description, User creator);
     void addCollaborator(Project project, User collaborator);
     void saveProject(Project project);
