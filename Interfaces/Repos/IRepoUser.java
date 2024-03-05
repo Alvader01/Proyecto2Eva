@@ -1,4 +1,4 @@
 package Interfaces.Repos;
 
-public interface RepoUser {
+public interface IRepoUser {
 }
