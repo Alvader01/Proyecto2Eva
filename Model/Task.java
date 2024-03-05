@@ -1,6 +1,8 @@
 package Model;
 
 import Interfaces.Model.ITask;
+import Model.Repos.RepoUser;
+import Model.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -14,6 +16,9 @@ public class Task implements ITask {
     private String collaboratorInCharge;
     private String state;
     private List<String> comments;
+
+
+
 
 
     public Task(String name, String description, LocalDate startDate, LocalDate endDate, String collaboratorInCharge, String state, List<String> comments) {
@@ -88,12 +93,31 @@ public class Task implements ITask {
      */
     @Override
     public void createComment(Task task,String comment) {
-        if (comments == null) {
-            comments = new ArrayList<>();
-        }
+        for (User user: RepoUser.getInstance().getAll())
+            if (searchProjectCreator(user.getUsername()) || user.getUsername().equals(getCollaboratorInCharge())) {
+                if (comments == null) {
+                comments = new ArrayList<>();
+            }
         comments.add(comment);
         //Añadir comentario a una tarea en especifico
     }
+
+
+
+
+
+
+
+
+    public void searchProjectCreator(String projectCreator){
+                boolean creatorFound=false;
+                for (Project project:projects){
+                    if (projectCreator == project.getProjectCreator()){
+                        creatorFound=true;
+
+                    }
+                }
+        }
 
 
 
