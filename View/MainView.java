@@ -43,7 +43,23 @@ public class MainView implements IMainView {
      * Mostrar mensaje.
      * @param message recibe el mensaje a mostrar.
      */
-    public void showMessage(String message){
+    public static void showMessage(String message){
         System.out.println(message);
+    }
+
+    public void createProject(){
+        System.out.println("Por favor, introduzca los siguientes datos:");
+        System.out.println("Nombre: ");
+        System.out.println("Descripción: ");
+        System.out.println("Creador: ");
+    }
+
+    public void createTask(){
+        System.out.println("Por favor, introduzca los siguientes datos:");
+        System.out.println("Tarea: ");
+        System.out.println("Descripción: ");
+        System.out.println("Fecha de inicio: ");
+        System.out.println("Fecha de fin: ");
+        System.out.println("Estado: ");
     }
 }
