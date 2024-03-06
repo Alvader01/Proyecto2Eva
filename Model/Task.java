@@ -13,20 +13,17 @@ public class Task implements ITask {
     private String description;
     private LocalDate startDate;
     private LocalDate endDate;
-    private String collaboratorInCharge;
-    private String state;
+    private String assignedUser;
+    private TaskState state;
     private List<String> comments;
 
 
-
-
-
-    public Task(String name, String description, LocalDate startDate, LocalDate endDate, String collaboratorInCharge, String state, List<String> comments) {
+    public Task(String name, String description, LocalDate startDate, LocalDate endDate, String assignedUser, TaskState state, List<String> comments) {
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
-        this.collaboratorInCharge = collaboratorInCharge;
+        this.assignedUser = assignedUser;
         this.state = state;
         this.comments = comments;
     }
@@ -63,19 +60,19 @@ public class Task implements ITask {
         this.endDate = endDate;
     }
 
-    public String getCollaboratorInCharge() {
-        return collaboratorInCharge;
+    public String getAssignedUser() {
+        return assignedUser;
     }
 
-    public void setCollaboratorInCharge(String collaboratorInCharge) {
-        this.collaboratorInCharge = collaboratorInCharge;
+    public void setAssignedUser(String assignedUser) {
+        this.assignedUser = assignedUser;
     }
 
-    public String getState() {
+    public TaskState getState() {
         return state;
     }
 
-    public void setState(String state) {
+    public void setState(TaskState state) {
         this.state = state;
     }
 
@@ -86,41 +83,6 @@ public class Task implements ITask {
     public void setComments(List<String> comments) {
         this.comments = comments;
     }
-
-    /**
-     * Este metodo crea los comentarios de las tareas
-     * @param comment
-     */
-    @Override
-    public void createComment(Task task,String comment) {
-        for (User user: RepoUser.getInstance().getAll())
-            if (searchProjectCreator(user.getUsername()) || user.getUsername().equals(getCollaboratorInCharge())) {
-                if (comments == null) {
-                comments = new ArrayList<>();
-            }
-        comments.add(comment);
-        //Añadir comentario a una tarea en especifico
-    }
-
-
-
-
-
-
-
-
-    public void searchProjectCreator(String projectCreator){
-                boolean creatorFound=false;
-                for (Project project:projects){
-                    if (projectCreator == project.getProjectCreator()){
-                        creatorFound=true;
-
-                    }
-                }
-        }
-
-
-
 }
 
 
