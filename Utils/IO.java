@@ -4,6 +4,12 @@ import java.util.Scanner;
 
 public class IO {
     private static Scanner teclado = new Scanner(System.in);
+
+    /**
+     * Este metodo lo que hace es mostrar un mensaje y leer una cadena.
+     * @param message el mensaje a mostrar
+     * @return el mensaje introducido
+     */
     public String readString(String message) {
         System.out.println(message);
         String input = " ";
@@ -17,6 +23,11 @@ public class IO {
         return input;
     }
 
+    /**
+     * Este metodo lo que hace es mostrar un mensaje y leer un entero.
+     * @param message el mensaje a mostrar
+     * @return el entero introducido
+     */
     public int readInt(String message) {
         System.out.println(message);
         int opcion = 0;
