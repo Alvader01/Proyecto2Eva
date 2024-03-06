@@ -1,7 +1,10 @@
 package Model;
 
 import Interfaces.Model.IProject;
+import Model.Repos.RepoProject;
 import Model.Repos.RepoUser;
+import Utils.IO;
+import View.MainView;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -14,17 +17,18 @@ public class Project implements IProject {
     Scanner teclado = new Scanner(System.in);
     private String name;
     private String description;
-    private User projectCreator;
+    private String projectCreator;
     private List<User> collaborators;
     private ArrayList<Task> tasks;
 
 
 
-    public Project(String name, String description, User projectCreator) {
+    public Project(String name, String description, String projectCreator) {
         this.name = name;
         this.description = description;
         this.projectCreator = projectCreator;
         this.tasks = new ArrayList<Task>();
+        this.collaborators = new ArrayList<User>();
     }
 
     public List<User> getCollaborators() {
@@ -50,11 +54,11 @@ public class Project implements IProject {
         this.description = description;
     }
 
-    public User getProjectCreator() {
+    public String getProjectCreator() {
         return projectCreator;
     }
 
-    public void setProjectCreator(User projectCreator) {
+    public void setProjectCreator(String projectCreator) {
         this.projectCreator = projectCreator;
     }
 
@@ -74,86 +78,109 @@ public class Project implements IProject {
      * @param endDate
      */
     @Override
-    public boolean createTask(Project project, String name, String description, LocalDate startDate, LocalDate endDate) {
-        // Verificar que el creador del proyecto sea el usuario actual
-        if (!project.getProjectCreator().equals(Session.getInstance().getLoggedInUser())) {
-            // Mensaje de que solo el creador del proyecto puede añadir colaboradores
-            //System.out.println("Solo el creador del proyecto puede añadir tareas.");
-            return false;
+    public boolean createTask(Project project, String name, String description, LocalDate startDate, LocalDate endDate,String assignedUser) {
+        boolean taskCreated = false;
+        name=IO.readString("Introduce el nombre de la tarea");
+        description=IO.readString("Introduce la descripción de la tarea");
+        startDate=IO.readDate("Introduce la fecha de inicio de la tarea");
+        endDate=IO.readDate("Introduce la fecha de finalización de la tarea");
+        assignedUser=getAssignedUser();
+        if (!project.getTasks().equals(name)) {
+            Task newTask = new Task(name, description, startDate, endDate, assignedUser, TaskState.WITHOUT_STARTING);
+            project.getTasks().add(newTask);
+            taskCreated=true;
+        }else {
+            MainView.showMessage("La tarea ya existe");
         }
-        // Solicitar el nombre de la tarea por teclado
-        //System.out.print("Ingrese el nombre de la tarea: ");
-        name = teclado.nextLine();
-
-        // Solicitar la descripción de la tarea por teclado
-        //System.out.print("Ingrese la descripción de la tarea: ");
-        description = teclado.nextLine();
-
-        // Solicitar la fecha de inicio de la tarea por teclado
-        //System.out.print("Ingrese la fecha de inicio de la tarea (dd/MM/yyyy): ");
-        String startDateInput = teclado.nextLine();
-        startDate = LocalDate.parse(startDateInput, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
-        // Solicitar la fecha de fin de la tarea por teclado
-        //System.out.print("Ingrese la fecha de fin de la tarea (dd/MM/yyyy): ");
-        String endDateInput = teclado.nextLine();
-        endDate = LocalDate.parse(endDateInput, DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-
-        String username = teclado.nextLine();
-        User user = RepoUser.getInstance().getById(username);
-
-
-
-        // Solicitar un comentario por teclado
-        //System.out.print("Ingrese un comentario para la tarea: ");
-        String comment = teclado.nextLine();
-
-        createComment(comment);
-
-
-        // Crear la tarea
-        Task newTask = new Task(name, description, startDate, endDate,username, TaskState.WITHOUT_STARTING,comment);
-        project.getTasks().add(newTask);
-        if (user == null) {
-            //System.out.println("El usuario no existe.");
-            return false;
-        }
-
-        newTask.setAssignedUser(user);
-
-        return true;
+        return taskCreated;
     }
+    public String getAssignedUser(){
+        String username = IO.readString("Introduce el nombre del usuario");
+        String assignedUser = "";
+        for (User user : collaborators) {
+           if (user.getUsername().equals(username)) {
+               assignedUser = username;
+           }else {
+               MainView.showMessage("El usuario introducido no existe");
+           }
+        }
+        return assignedUser;
+    }
+
 
     /**
      * Con este metodo cambiamos los estados de las tareas
      * @param task
-     * @param newStatus
-     * @param comment
      */
     @Override
-    public void changeTaskStatus(Task task, String newStatus, String comment) {
+    public void changeTaskStatus(Task task) {
+        if (Session.getInstance().getLoggedInUser().getUsername().equals(task.getAssignedUser())||
+                getProjectCreator().equals(Session.getInstance().getLoggedInUser().getUsername())) {
+            int option = IO.readInt("1. Sin iniciar\n2. En progreso\n3. finalizado\n");
 
+            switch (option) {
+                case 1:
+                    task.setState(TaskState.WITHOUT_STARTING);
+                    break;
+                case 2:
+                    task.setState(TaskState.IN_PROGRES);
+                    break;
+                case 3:
+                    task.setState(TaskState.FINISHED);
+                    break;
+            }
+
+        };
     }
     /**
      * Con este metodo eliminamos tareas de los proyectos
-     * @param task
+     * @param taskName
      */
     @Override
-    public boolean deleteTask(Task task) {
-
+    public boolean deleteTask(String taskName) {
+        boolean taskDeleted = false;
+        for (Task task : tasks) {
+            if (task.getName().equals(taskName) && Session.getInstance().getLoggedInUser().getUsername().equals(getProjectCreator())) {
+                tasks.remove(task);
+                taskDeleted = true;
+            }else {
+                MainView.showMessage("La tarea no existe o no eres el creador del proyecto");
+            }
+        }
+        return taskDeleted;
     }
+
     /**
      * Con este metodo añadimos usuarios a las tareas
-     * @param user
+     * @param task
+     * @param username
      */
     @Override
-    public boolean addUserTask(User user) {
+    public boolean updateAssignedUser(Task task, String username) {
+        boolean assignedUser = false;
+        for (User user : collaborators) {
+            if (user.getUsername().equals(username)) {
+                task.setAssignedUser(user.getUsername());
+                assignedUser = true;
+            }
+        }
+        return assignedUser;
+
 
     }
 
     @Override
-    public boolean createComment(String comment) {
-        return false;
+    public boolean createComment(Task task, String comment) {
+        boolean commentCreated;
+        if (Session.getInstance().getLoggedInUser().getUsername().equals(task.getAssignedUser()) ||
+                getProjectCreator().equals(Session.getInstance().getLoggedInUser().getUsername())) {
+            task.getComments().add(comment);
+            commentCreated = true;
+        } else {
+            System.out.println("Solo el usuario asignado o el creador del proyecto puede crear un comentario en la tarea.");
+            commentCreated = false;
+        }
+        return commentCreated;
     }
 
     @Override

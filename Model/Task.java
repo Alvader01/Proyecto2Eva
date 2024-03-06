@@ -7,6 +7,7 @@ import Model.User;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 public class Task implements ITask {
     private String name;
@@ -18,14 +19,14 @@ public class Task implements ITask {
     private List<String> comments;
 
 
-    public Task(String name, String description, LocalDate startDate, LocalDate endDate, String assignedUser, TaskState state, List<String> comments) {
+    public Task(String name, String description, LocalDate startDate, LocalDate endDate, String assignedUser, TaskState state) {
         this.name = name;
         this.description = description;
         this.startDate = startDate;
         this.endDate = endDate;
         this.assignedUser = assignedUser;
         this.state = state;
-        this.comments = comments;
+        this.comments = new ArrayList<>();
     }
 
     public String getName() {
@@ -82,6 +83,19 @@ public class Task implements ITask {
 
     public void setComments(List<String> comments) {
         this.comments = comments;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Task task = (Task) o;
+        return Objects.equals(name, task.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 }
 
