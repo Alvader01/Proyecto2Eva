@@ -10,7 +10,7 @@ public class IO {
      * @param message el mensaje a mostrar
      * @return el mensaje introducido
      */
-    public String readString(String message) {
+    public static String readString(String message) {
         System.out.println(message);
         String input = " ";
         try {
@@ -28,7 +28,7 @@ public class IO {
      * @param message el mensaje a mostrar
      * @return el entero introducido
      */
-    public int readInt(String message) {
+    public static int readInt(String message) {
         System.out.println(message);
         int opcion = 0;
         try {
