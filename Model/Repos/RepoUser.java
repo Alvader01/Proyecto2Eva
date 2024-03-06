@@ -1,13 +1,17 @@
 package Model.Repos;
 
+import Interfaces.Repos.IRepoUser;
+import Model.Session;
 import Model.User;
+import Utils.IO;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-public class RepoUser extends Repository<User, String> {
-    private final static String FILENAME = "users.txt";
+public class RepoUser extends Repository<User, String> implements IRepoUser {
+    private final static String FILENAME = "users.bin";
     private static RepoUser _instance;
     private Set<User> users;
 
@@ -26,39 +30,59 @@ public class RepoUser extends Repository<User, String> {
     }
 
     /**
-     * Crear un usuario y añadirlo a la lista de usuarios con correccion de errores
+     * Añade usuario a la lista de usuarios
      *
-     * @param data Data del usuario
+     * @param newUser Usuario a añadir
      */
     @Override
-    public User create(User data) {
-        User user = null;
-        if (users.add(data)) {
-            user = data;
+    public User create(User newUser) throws NoSuchAlgorithmException {
+        String name = IO.readString("Introduce el nombre: ");
+        String username = IO.readString("Introduce el nombre de usuario: ");
+        String password = IO.readString("Introduce la contraseña: ");
+        String email = getEmailWithFormat();
+        if (!userExists(username) || isEmailUnique(email)) {
+            newUser = new User(name, username, password, email);
+            users.add(newUser);
+        } else {
+            System.out.println("El usuario ya existe");
         }
-        return user;
+        return  newUser;
     }
 
+    /**
+     * Buscar usuario por nombre de usuario
+     *
+     * @param username Username de usuario
+     * @return Usuario encontrado
+     */
     @Override
-    public User getById(String id) {
-        return null;
+    public User getById(String username) {
+        User foundUser = null;
+        for (User user : users) {
+            if (user.getUsername().equals(username)) {
+                foundUser = user;
+            }
+        }
+        return foundUser;
     }
 
     /**
      * Actualiza un usuario con los datos introducidos.
      *
-     * @param data el usuario que contiene los datos
-     * @return el usuario con los datos actualizados
+     * @param username el nombre de usuario a actualizar
+     * @return true si se ha actualizado el usuario, false si no
      */
     @Override
-    public User update(User data) {
-        User result = getById(data.getUsername());
-        if (result != null) {
-            users.remove(result);
-            users.add(data);
-            result = data;
+    public boolean update(String username) {
+        boolean userUpdated = false;
+        for (User user : users) {
+            if (user.getUsername().equals(username) &&
+                    user.getUsername().equals(Session.getInstance().getLoggedInUser().getUsername())) {
+                user.setUsername(username);
+                userUpdated = true;
+            }
         }
-        return result;
+        return userUpdated;
     }
 
     /**
@@ -81,20 +105,49 @@ public class RepoUser extends Repository<User, String> {
     public boolean delete(String username) {
         boolean userDeleted = false;
         for (User user : users) {
-            if (user.getUsername().equals(username)) {
+            if (user.getUsername().equals(username) ||
+                    user.getUsername().equals(Session.getInstance().getLoggedInUser().getUsername())) {
                 users.remove(user);
                 userDeleted = true;
+            } else {
+                System.out.println("El usuario no existe");
             }
         }
         return userDeleted;
     }
 
     /**
-     * comprobar si el usuario existe segun el username
+     * Obtener el email del usuario con el formato correcto
+     *
+     * @return Email del usuario
+     */
+    @Override
+    public String getEmailWithFormat() {
+        String email;
+        do {
+            email = IO.readString("Introduce el email con formato (emailejemplo@hola.mundo): ");
+        } while (!isValidEmailFormat(email) && isEmailUnique(email));
+        return email;
+    }
+
+    /**
+     * Comprobar si el email tiene el formato correcto
+     *
+     * @param email Email del usuario
+     * @return True si el email tiene el formato correcto, false si no tiene el formato correcto
+     */
+    @Override
+    public boolean isValidEmailFormat(String email) {
+        return email.matches("^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,3}$");
+    }
+
+    /**
+     * Comprobar si el usuario existe segun el username
      *
      * @param username Username del usuario
      * @return True si el usuario ya existe, false si no existe
      */
+    @Override
     public boolean userExists(String username) {
         boolean userExists = false;
         for (User user : users) {
@@ -111,6 +164,7 @@ public class RepoUser extends Repository<User, String> {
      * @param email Email del usuario
      * @return True si el email esta en uso, false si no esta en uso
      */
+    @Override
     public boolean isEmailUnique(String email) {
         boolean isUniqueUser = false;
         for (User user : users) {
@@ -126,6 +180,7 @@ public class RepoUser extends Repository<User, String> {
      *
      * @return true si se ha guardado con exito, false si no
      */
+    @Override
     public boolean save() {
         return save(FILENAME);
     }

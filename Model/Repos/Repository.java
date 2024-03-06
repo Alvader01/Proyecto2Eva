@@ -3,6 +3,7 @@ package Model.Repos;
 import Model.Serializator;
 
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 
 public abstract class Repository<T, K> implements Serializable {
@@ -27,13 +28,13 @@ public abstract class Repository<T, K> implements Serializable {
         return Serializator.serializable(this, filename);
     }
 
-    public abstract T create(T data);
+    public abstract T create(T data) throws NoSuchAlgorithmException;
 
     public abstract T getById(K id);
 
     public abstract Collection<T> getAll();
 
-    public abstract T update(T data);
+    public abstract boolean update(K data);
 
-    public abstract boolean delete(K username);
+    public abstract boolean delete(K id);
 }
