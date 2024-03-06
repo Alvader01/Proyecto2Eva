@@ -94,9 +94,9 @@ public class Project implements IProject {
     @Override
     public String toString() {
         return "Project{" +
-                "name='" + name + '\'' +
-                ", description='" + description + '\'' +
-                ", projectCreator='" + projectCreator + '\'' +
+                "Nombre del Proyecto='" + name + '\'' +
+                ", Descripción del Proyecto='" + description + '\'' +
+                ", Creador del Proyecto='" + projectCreator + '\'' +
                 '}';
     }
 
