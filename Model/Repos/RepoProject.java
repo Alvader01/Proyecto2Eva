@@ -9,10 +9,11 @@ import Utils.IO;
 import View.MainView;
 
 
+import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
 public class RepoProject extends Repository<Project, String> implements IRepoProject {
-    private final static String FILENAME = "projects.txt";
+    private final static String FILENAME = "projects.bin";
     private static RepoProject _instance;
     List<Project> projects;
 
@@ -30,30 +31,19 @@ public class RepoProject extends Repository<Project, String> implements IRepoPro
     }
 
     @Override
-    public boolean createProject(String name, String description,User creator) {
-        // Mensaje para Solicitar el nombre del proyecto al usuario
-        name = scanner.nextLine();
-
-        for (Project project : projects) {
-            if (project.getName().equals(name)) {
-                // Mensaje de que no se puede crear porque el nombre ya existe
-                return false;
-            }
+    public Project create(Project newProject) {
+        String name = IO.readString("Introduce el nombre: ");
+        String description = IO.readString("Introduce la descripcion del proyecto: ");
+        String creator = Session.getInstance().getLoggedInUser().getUsername();
+        if (!newProject.getName().equals(name)) {
+            newProject = new Project(name, description, creator);
+            projects.add(newProject);
+        } else {
+            System.out.println("El proyecto ya existe");
         }
-
-        // Mensaje para Solicitar la descripción del proyecto al usuario
-        description = scanner.nextLine();
-
-        // Crear un nuevo proyecto con el nombre y la descripción proporcionados
-        creator = Session.getInstance().getLoggedInUser();
-        Project newProject = new Project(name, description, creator);
-
-        // Agregar el nuevo proyecto a la lista de proyectos
-        projects.add(newProject);
-
-        // Devuelve true para indicar que el proyecto se creo correctamente
-        return true;
+        return  newProject;
     }
+
 
     @Override
     public boolean addCollaborator(Project project, User collaborator) {
@@ -68,12 +58,10 @@ public class RepoProject extends Repository<Project, String> implements IRepoPro
         return addedCollaborator;
     }
 
-
-    public void showCollaborators(){
-        for (User user :  ) {
-            //Esto tambien tenemos que implementarlo en el view pero lo voy a dejar asi para
-            // saber que tenemos que poner
-            System.out.println("Nombre de usuario: " + user.getName());
+    @Override
+    public void showCollaborators(Project project){
+        for (User user : project.getCollaborators()) {
+            System.out.println("Nombre de usuario: " + user.getUsername());
         }
 
     }
@@ -100,7 +88,7 @@ public class RepoProject extends Repository<Project, String> implements IRepoPro
         }
         return removedCollaborator;
     }
-
+    @Override
     public boolean collaboratorExists(Project project, String username) {
         boolean collaboratorExists = false;
         for (User user : project.getCollaborators()) {
@@ -111,30 +99,57 @@ public class RepoProject extends Repository<Project, String> implements IRepoPro
         }
         return collaboratorExists;
     }
-
-        public boolean isProjectCreator (Project project,String username) {
-            boolean isProjectCreator = false;
-                if (project.getProjectCreator().equals(username)) {
+    @Override
+    public boolean isProjectCreator(Project project, String username) {
+        boolean isProjectCreator = false;
+        if (project.getProjectCreator().equals(username)) {
                     isProjectCreator = true;
                 }
-            return isProjectCreator;
-        }
-
-
-    public boolean delete(String projectname) {
-        boolean userDeleted = false;
-        for (Project project : projects) {
-            if (Project.getName().equals(username)) {
-                projectname.remove(user);
-                userDeleted = true;
-            }
-        }
-        return userDeleted;
+        return isProjectCreator;
     }
 
+    @Override
+    public boolean update(String projectName) {
+        boolean projectUpdated = false;
+        for (Project project : projects){
+            if (project.getName().equals(projectName) &&
+                    project.getProjectCreator().equals(Session.getInstance().getLoggedInUser().getUsername())){
+                project.setName(projectName);
+                projectUpdated= true;
+            }
+        }
+       return  projectUpdated;
+    }
 
+    @Override
+    public boolean delete(String projectName) {
+        boolean projectDeleted = false;
+        for (Project project : projects) {
+            if (project.getName().equals(projectName)) {
+                projects.remove(project);
+                projectDeleted = true;
+            }
+        }
+        return projectDeleted;
+    }
 
+    @Override
+    public Project getById(String projectName) {
+        Project foundProject = null;
+        for (Project project : projects) {
+            if (project.getName().equals(projectName)) {
+                foundProject = project;
+            }
+        }
+        return foundProject;
+    }
 
+    @Override
+    public List<Project> getAll() {
+        return projects;
+    }
+
+    @Override
     public boolean save() {
         return save(FILENAME);
     }
