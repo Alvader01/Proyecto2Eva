@@ -6,6 +6,7 @@ import Model.Project;
 import Model.Session;
 import Model.User;
 import Utils.IO;
+import View.MainView;
 
 
 import java.util.*;
@@ -58,7 +59,7 @@ public class RepoProject extends Repository<Project, String> implements IRepoPro
     public boolean addCollaborator(Project project, User collaborator) {
         boolean addedCollaborator;
         if (project.getCollaborators().contains(collaborator)) {
-            MainView.showMessage("Colaborador ya agregado en el proyecto");
+           MainView.showMessage("Colaborador ya agregado en el proyecto");
             addedCollaborator = false;
         } else {
             project.getCollaborators().add(collaborator);
