@@ -1,18 +1,12 @@
 package Model.Repos;
 
-import Interfaces.Repos.IRepoProject;
-import Interfaces.View.IMainView;
+import Interfaces.Repos.IRepository;
 import Model.Project;
-import Model.Session;
 import Model.User;
-import Utils.IO;
-import View.MainView;
 
-
-import java.security.NoSuchAlgorithmException;
 import java.util.*;
 
-public class RepoProject extends Repository<Project, String> implements IRepoProject {
+public class RepoProject extends Repository<Project, String> implements IRepository<Project, String> {
     private final static String FILENAME = "projects.bin";
     private static RepoProject _instance;
     List<Project> projects;
@@ -20,6 +14,7 @@ public class RepoProject extends Repository<Project, String> implements IRepoPro
     private RepoProject() {
         this.projects = new ArrayList<>();
     }
+
     public static RepoProject getInstance() {
         if (_instance == null) {
             _instance = (RepoProject) load(FILENAME);
@@ -30,97 +25,41 @@ public class RepoProject extends Repository<Project, String> implements IRepoPro
         return _instance;
     }
 
-    @Override
-    public Project create(Project newProject) {
-        String name = IO.readString("Introduce el nombre: ");
-        String description = IO.readString("Introduce la descripcion del proyecto: ");
-        String creator = Session.getInstance().getLoggedInUser().getUsername();
-        if (!newProject.getName().equals(name)) {
-            newProject = new Project(name, description, creator);
-            projects.add(newProject);
-        } else {
-            System.out.println("El proyecto ya existe");
-        }
-        return  newProject;
-    }
-
-
-    @Override
-    public boolean addCollaborator(Project project, User collaborator) {
-        boolean addedCollaborator;
-        if (project.getCollaborators().contains(collaborator)) {
-           MainView.showMessage("Colaborador ya agregado en el proyecto");
-            addedCollaborator = false;
-        } else {
-            project.getCollaborators().add(collaborator);
-            addedCollaborator = true;
-        }
-        return addedCollaborator;
-    }
-
-    @Override
-    public void showCollaborators(Project project){
-        for (User user : project.getCollaborators()) {
-            System.out.println("Nombre de usuario: " + user.getUsername());
-        }
-
-    }
-
-
     /**
+     * Añade proyecto a la lista de proyectos*
      *
-     * @param project
-     * @param collaborator
-     * @return
+     * @param newProject Proyecto a añadir
+     * @return Proyecto añadido
      */
     @Override
-    public boolean removeCollaborator(Project project, User collaborator) {
-        boolean removedCollaborator = false;
-        if (!isProjectCreator(project,collaborator.getUsername())) {
-            removedCollaborator = false;
-        } else {
-            String username = IO.readString("Introduce el nombre del usuario");
-            if (collaboratorExists(project, username)) {
-                project.getCollaborators().remove(collaborator);
-                removedCollaborator = true;
-            }
-
-        }
-        return removedCollaborator;
+    public Project create(Project newProject) {
+        projects.add(newProject);
+        return newProject;
     }
+
+    /**
+     * Actualiza un proyecto con los datos introducidos
+     *
+     * @param data datos del proyecto a actualizar
+     * @return Proyecto actualizado
+     */
     @Override
-    public boolean collaboratorExists(Project project, String username) {
-        boolean collaboratorExists = false;
-        for (User user : project.getCollaborators()) {
-            if (user.getName().equals(username)) {
-                collaboratorExists = true;
-            }
-
+    public Project update(Project data) {
+        Project result = getById(data.getName());
+        if (result != null) {
+            projects.remove(result);
+            projects.add(data);
+            result = data;
         }
-        return collaboratorExists;
-    }
-    @Override
-    public boolean isProjectCreator(Project project, String username) {
-        boolean isProjectCreator = false;
-        if (project.getProjectCreator().equals(username)) {
-                    isProjectCreator = true;
-                }
-        return isProjectCreator;
+        return result;
     }
 
-    @Override
-    public boolean update(String projectName) {
-        boolean projectUpdated = false;
-        for (Project project : projects){
-            if (project.getName().equals(projectName) &&
-                    project.getProjectCreator().equals(Session.getInstance().getLoggedInUser().getUsername())){
-                project.setName(projectName);
-                projectUpdated= true;
-            }
-        }
-       return  projectUpdated;
-    }
-
+    /**
+     * Borrar proyecto de la lista de proyectos
+     *
+     * @param projectName Nombre del proyecto
+     * @return True si se ha eliminado el proyecto, false si ha habido un error al borrar el proyecto
+     */
     @Override
     public boolean delete(String projectName) {
         boolean projectDeleted = false;
@@ -133,6 +72,12 @@ public class RepoProject extends Repository<Project, String> implements IRepoPro
         return projectDeleted;
     }
 
+    /**
+     * Obtener un proyecto según su nombre
+     *
+     * @param projectName Nombre del proyecto
+     * @return Proyecto encontrado
+     */
     @Override
     public Project getById(String projectName) {
         Project foundProject = null;
@@ -144,16 +89,22 @@ public class RepoProject extends Repository<Project, String> implements IRepoPro
         return foundProject;
     }
 
+    /**
+     * Obtener la lista de proyectos
+     *
+     * @return
+     */
     @Override
-    public List<Project> getAll() {
+    public Collection<Project> getAll() {
         return projects;
     }
 
-    @Override
+    /**
+     * Guarda la lista de proyectos en un fichero
+     *
+     * @return true si se ha guardado con éxito, false si no
+     */
     public boolean save() {
         return save(FILENAME);
     }
-
-
-
 }

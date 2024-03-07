@@ -1,17 +1,17 @@
 package Interfaces.Model;
 
-import Model.Project;
-import Model.Task;
-import Model.User;
 
-import java.time.LocalDate;
+import Model.Task;
+import Model.TaskState;
+
+import java.util.List;
 
 public interface IProject  {
+    Task addTask(Task task);
+    List<Task> getAll();
     boolean deleteTask(String taskName);
-    boolean createComment(Task task, String comment);
+    Task getById(String nameTask);
+    void changeTaskStatus(String nameTask, TaskState state);
+    void addComment(String nameTask, String comment);
     boolean updateAssignedUser(Task task, String username);
-    void changeTaskStatus(Task task);
-    boolean createTask(Project project, String name, String description, LocalDate startDate, LocalDate endDate,String assignedUser);
-
-
 }
