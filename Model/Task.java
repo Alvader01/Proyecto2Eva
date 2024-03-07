@@ -1,8 +1,6 @@
 package Model;
 
 import Interfaces.Model.ITask;
-import Model.Repos.RepoUser;
-import Model.User;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

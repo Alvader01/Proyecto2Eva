@@ -14,7 +14,7 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class Project implements IProject {
-    Scanner teclado = new Scanner(System.in);
+    //Scanner teclado = new Scanner(System.in);
     private String name;
     private String description;
     private String projectCreator;
@@ -69,6 +69,73 @@ public class Project implements IProject {
     public void setTasks(ArrayList<Task> tasks) {
         this.tasks = tasks;
     }
+
+    public boolean addTask(Task task){
+        return tasks.add(task);
+    }
+    public boolean removeTask(Task task){
+        return tasks.remove(task);
+    }
+
+    public List<Task> getAll() {
+        return tasks;
+    }
+
+    public Task getById(String nameTask) {
+        Task foundTask = null;
+        for (Task task : tasks) {
+            if (task.getName().equals(nameTask)) {
+                foundTask = task;
+            }
+        }
+        return foundTask;
+    }
+
+    public TaskState changeTaskStauts(String nameTask, TaskState state){
+        for (Task task : tasks) {
+            if (task.getName().equals(nameTask)) {
+                task.setState(state);
+            }
+        }
+        return state;
+    }
+
+    public boolean changeAssignedUser(Task task, String username){
+        boolean assignedUser = false;
+        for (User user : collaborators) {
+            if (user.getUsername().equals(username)) {
+                task.setAssignedUser(user.getUsername());
+                assignedUser = true;
+            }
+        }
+        return assignedUser;
+    }
+
+    public boolean addComment(Task task, String comment){
+        return task.getComments().add(comment);
+    }
+
+    /**
+     * Con este metodo añadimos usuarios a las tareas
+     * @param task Tarea
+     * @param username Nombre de usuario
+     */
+    @Override
+    public boolean updateAssignedUser(Task task, String username) {
+        boolean assignedUser = false;
+        for (User user : collaborators) {
+            if (user.getUsername().equals(username)) {
+                task.setAssignedUser(user.getUsername());
+                assignedUser = true;
+            }
+        }
+        return assignedUser;
+    }
+
+
+
+
+
     /**
      * Con este metodo creamos las tareas
      * @param project
@@ -150,24 +217,7 @@ public class Project implements IProject {
         return taskDeleted;
     }
 
-    /**
-     * Con este metodo añadimos usuarios a las tareas
-     * @param task
-     * @param username
-     */
-    @Override
-    public boolean updateAssignedUser(Task task, String username) {
-        boolean assignedUser = false;
-        for (User user : collaborators) {
-            if (user.getUsername().equals(username)) {
-                task.setAssignedUser(user.getUsername());
-                assignedUser = true;
-            }
-        }
-        return assignedUser;
 
-
-    }
 
     @Override
     public boolean createComment(Task task, String comment) {
