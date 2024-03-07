@@ -11,7 +11,7 @@ public class TabsView implements ITabs {
     @Override
     public void showTabs() {
         System.out.println("-------------------------------");
-        System.out.println(RepoProject.toString());
+        System.out.println(RepoProject.);
         System.out.println("-------------------------------");
     }
 }
