@@ -22,21 +22,17 @@ public class MainView implements IMainView {
     /**
      * Menu para inicio del programa.
      */
-    public void showMenu(){
-        System.out.println("1. Crear usuario");
-        System.out.println("2. Iniciar sesión");
+    public static void showMenu(){
+        System.out.println("1. Iniciar sesión");
+        System.out.println("2. Crear usuario");
         System.out.println("3. Cerrar programa");
     }
 
     /**
-     * Menu para registrar usuario creando un nuevo usuario.
+     * Menu para cambiar el estado de la tarea.
      */
-    public void showRegister(){
-        System.out.println("Por favor, introduzca los siguientes datos:");
-        System.out.println("Nombre: ");
-        System.out.println("Usuario: ");
-        System.out.println("Contraseña: ");
-        System.out.println("Email: ");
+    public static void changeStatus(){
+        System.out.println("1. Sin iniciar\n2. En progreso\n3. finalizado\n");
     }
 
     /**
@@ -45,21 +41,5 @@ public class MainView implements IMainView {
      */
     public static void showMessage(String message){
         System.out.println(message);
-    }
-
-    public void createProject(){
-        System.out.println("Por favor, introduzca los siguientes datos:");
-        System.out.println("Nombre: ");
-        System.out.println("Descripción: ");
-        System.out.println("Creador: ");
-    }
-
-    public void createTask(){
-        System.out.println("Por favor, introduzca los siguientes datos:");
-        System.out.println("Tarea: ");
-        System.out.println("Descripción: ");
-        System.out.println("Fecha de inicio: ");
-        System.out.println("Fecha de fin: ");
-        System.out.println("Estado: ");
     }
 }
