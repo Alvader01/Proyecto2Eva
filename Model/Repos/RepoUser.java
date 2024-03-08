@@ -1,16 +1,11 @@
 package Model.Repos;
 
-import Interfaces.Repos.IRepoUser;
-import Model.Session;
+import Interfaces.Repos.IRepository;
 import Model.User;
-import Utils.IO;
 
-import java.security.NoSuchAlgorithmException;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
-public class RepoUser extends Repository<User, String> implements IRepoUser {
+public class RepoUser extends Repository<User, String> implements IRepository<User, String> {
     private final static String FILENAME = "users.bin";
     private static RepoUser _instance;
     private Set<User> users;
@@ -35,18 +30,9 @@ public class RepoUser extends Repository<User, String> implements IRepoUser {
      * @param newUser Usuario a añadir
      */
     @Override
-    public User create(User newUser) throws NoSuchAlgorithmException {
-        String name = IO.readString("Introduce el nombre: ");
-        String username = IO.readString("Introduce el nombre de usuario: ");
-        String password = IO.readString("Introduce la contraseña: ");
-        String email = getEmailWithFormat();
-        if (!userExists(username) || isEmailUnique(email)) {
-            newUser = new User(name, username, password, email);
-            users.add(newUser);
-        } else {
-            System.out.println("El usuario ya existe");
-        }
-        return  newUser;
+    public User create(User newUser) {
+        users.add(newUser);
+        return newUser;
     }
 
     /**
@@ -69,20 +55,18 @@ public class RepoUser extends Repository<User, String> implements IRepoUser {
     /**
      * Actualiza un usuario con los datos introducidos.
      *
-     * @param username el nombre de usuario a actualizar
-     * @return true si se ha actualizado el usuario, false si no
+     * @param data datos del usuario a actualizar
+     * @return el usuario actualizado
      */
     @Override
-    public boolean update(String username) {
-        boolean userUpdated = false;
-        for (User user : users) {
-            if (user.getUsername().equals(username) &&
-                    user.getUsername().equals(Session.getInstance().getLoggedInUser().getUsername())) {
-                user.setUsername(username);
-                userUpdated = true;
-            }
+    public User update(User data) {
+        User result = getById(data.getUsername());
+        if (result != null) {
+            users.remove(result);
+            users.add(data);
+            result = data;
         }
-        return userUpdated;
+        return result;
     }
 
     /**
@@ -105,82 +89,19 @@ public class RepoUser extends Repository<User, String> implements IRepoUser {
     public boolean delete(String username) {
         boolean userDeleted = false;
         for (User user : users) {
-            if (user.getUsername().equals(username) ||
-                    user.getUsername().equals(Session.getInstance().getLoggedInUser().getUsername())) {
+            if (user.getUsername().equals(username)) {
                 users.remove(user);
                 userDeleted = true;
-            } else {
-                System.out.println("El usuario no existe");
             }
         }
         return userDeleted;
     }
 
     /**
-     * Obtener el email del usuario con el formato correcto
-     *
-     * @return Email del usuario
-     */
-    @Override
-    public String getEmailWithFormat() {
-        String email;
-        do {
-            email = IO.readString("Introduce el email con formato (emailejemplo@hola.mundo): ");
-        } while (!isValidEmailFormat(email) && isEmailUnique(email));
-        return email;
-    }
-
-    /**
-     * Comprobar si el email tiene el formato correcto
-     *
-     * @param email Email del usuario
-     * @return True si el email tiene el formato correcto, false si no tiene el formato correcto
-     */
-    @Override
-    public boolean isValidEmailFormat(String email) {
-        return email.matches("^[a-zA-Z0-9]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,3}$");
-    }
-
-    /**
-     * Comprobar si el usuario existe segun el username
-     *
-     * @param username Username del usuario
-     * @return True si el usuario ya existe, false si no existe
-     */
-    @Override
-    public boolean userExists(String username) {
-        boolean userExists = false;
-        for (User user : users) {
-            if (user.getUsername().equals(username)) {
-                userExists = true;
-            }
-        }
-        return userExists;
-    }
-
-    /**
-     * comprobar si el usuario existe segun el email
-     *
-     * @param email Email del usuario
-     * @return True si el email esta en uso, false si no esta en uso
-     */
-    @Override
-    public boolean isEmailUnique(String email) {
-        boolean isUniqueUser = false;
-        for (User user : users) {
-            if (user.getEmail().equals(email)) {
-                isUniqueUser = true;
-            }
-        }
-        return isUniqueUser;
-    }
-
-    /**
      * Guardar la lista de usuarios en un fichero
      *
-     * @return true si se ha guardado con exito, false si no
+     * @return true si se ha guardado con éxito, false si no
      */
-    @Override
     public boolean save() {
         return save(FILENAME);
     }
