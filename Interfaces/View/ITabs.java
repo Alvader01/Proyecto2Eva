@@ -6,7 +6,7 @@ import Model.User;
 
 public interface ITabs {
 
-    public void showAllProject(Project project);
+    public void showAllProjects(Project project);
     public void showProject(Project project);
     public void showAllTask(Task task);
     public void showTask(Task task);

@@ -14,21 +14,18 @@ public class RepoUserController {
 
     /**
      * Añade usuario a la lista de usuarios
-     *
-     * @param newUser Usuario a añadir
      */
-    public User createUser(User newUser) throws NoSuchAlgorithmException {
+    public void createUser() throws NoSuchAlgorithmException {
         String name = IO.readString("Introduce el nombre: ");
         String username = IO.readString("Introduce el nombre de usuario: ");
         String password = IO.readString("Introduce la contraseña: ");
         String email = getEmailWithFormat();
         if (!userExists(username) || isEmailUnique(email)) {
-            newUser = new User(name, username, password, email);
+            User newUser = new User(name, username, password, email);
             repoUser.create(newUser);
         } else {
             System.out.println("El usuario ya existe");
         }
-        return newUser;
     }
 
     public void showAllUsers() {
@@ -179,5 +176,9 @@ public class RepoUserController {
             }
         }
         return isUniqueUser;
+    }
+
+    public User getUser(String user) {
+        return repoUser.getById(user);
     }
 }

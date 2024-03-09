@@ -11,7 +11,7 @@ public class TabsView implements ITabs {
      * Este metodo muestra la información general de todos los proyectos.
      * @param project
      */
-    public void showAllProject(Project project) {
+    public void showAllProjects(Project project) {
         System.out.println("╔════════════════════════════════════════╗");
         System.out.println("║           Información del Proyecto     ║");
         System.out.println("╠════════════════════════════════════════╣");
