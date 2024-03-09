@@ -27,19 +27,27 @@ public class Session implements ISession {
      * Iniciar sesion de usuario
      *
      * @param username El username del usuario
-     * @param password La contrasena del usuario
+     * @param password La contraseña del usuario
      * @return El usuario logueado
      */
     @Override
-    public User login(String username, String password) throws NoSuchAlgorithmException {
-        User foundUser = null;
+    public boolean login(String username, String password) throws NoSuchAlgorithmException {
+        boolean foundUser = false;
         for (User user : users) {
             if (user.getName().equals(username) && user.isMyPassword(password)) {
-                foundUser = user;
+                loggedInUser = user;
+                foundUser = true;
+                break;
             }
         }
-        loggedInUser = foundUser;
         return foundUser;
+    }
+
+    /**
+     * Cerrar sesion
+     */
+    public void logout() {
+        loggedInUser = null;
     }
 
     /**

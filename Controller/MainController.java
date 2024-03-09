@@ -1,19 +1,62 @@
 package Controller;
 
-import Interfaces.Controller.IMainController;
+import Model.Repos.RepoProject;
+import Model.Repos.RepoUser;
+import Model.Session;
+import Model.User;
+import Utils.IO;
+import View.MainView;
 
-public class MainController implements IMainController {
+import java.security.NoSuchAlgorithmException;
 
-    public void run(){
-        //ProjectFalillo
-        //Vista principal
-        //Inicie sesión(Vista login, metodos de inicio de sesión)(1.Te pide que hacer crear proyecto, modificarlo, mostrarlo y borrarlo. 2. CRUD de las opciones que tienes con tu cuenta de usuario. 3.Logout).
-        //Creado Proyecto(metodos de creacion de proyecto).
-        //Modifico Proyecto(metodos de modificacion de proyecto)(Modificar las tareas(El crud de tareas general), los colaboradores(Añadir colaboradores, eliminar colaboradores), el estado).
-        //Muestro Proyecto(metodos de consulta de proyecto y tareas).
-        //Borro Proyecto(metodos de borrar de proyecto).
-        //Registrarse(metodos de registro).
-        //Cierre del programa.
+public class MainController {
 
+    MainView view = new MainView();
+    SubController subController = new SubController();
+    RepoUserController userController = new RepoUserController();
+    Session session = Session.getInstance();
+    RepoProject repoProject = RepoProject.getInstance();
+    RepoUser repoUser = RepoUser.getInstance();
+
+    public void run() {
+        try {
+            startMainMenu();
+        }catch (NoSuchAlgorithmException e){
+            e.fillInStackTrace();
+        }
+    }
+
+    public void startMainMenu() throws NoSuchAlgorithmException {
+        int option;
+        do {
+            view.showMainView();
+            view.showMenu();
+            option = IO.readInt("Elige una opción: ");
+            switch (option) {
+                case 1:
+                    String username = IO.readString("Usuario: ");
+                    String password = IO.readString("Contraseña: ");
+                    if (session.login(username, password)) {
+                        subController.menuOption1();
+                    } else {
+                        MainView.showMessage("Usuario o contraseña incorrecta");
+                    }
+                    break;
+                case 2:
+                    userController.createUser();
+                    break;
+                case 3:
+                    stop();
+                    break;
+                default:
+                    System.out.println("Opción no valida");
+            }
+        } while (option != 3);
+    }
+
+    public void stop(){
+        repoProject.save();
+        repoUser.save();
+        MainView.showMessage("ADIO");
     }
 }

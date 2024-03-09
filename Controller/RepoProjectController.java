@@ -3,12 +3,13 @@ package Controller;
 import Model.Project;
 import Model.Repos.RepoProject;
 import Model.Session;
-import Model.Task;
 import Model.User;
 import Utils.IO;
 import View.MainView;
+import View.TabsView;
 
 public class RepoProjectController {
+    private TabsView tabsView = new TabsView();
     private RepoProject repoProject = RepoProject.getInstance();
     private Session session = Session.getInstance();
 
@@ -27,19 +28,14 @@ public class RepoProjectController {
 
     public void showAllProjects(){
         for (Project project : repoProject.getAll()) {
-            System.out.println("Proyecto:" + project.getName());
-            System.out.println("Descripcion:" + project.getDescription());
-            System.out.println("Creador del proyecto:" + project.getProjectCreator());
+            tabsView.showAllProjects(project);
         }
     }
 
-    public void showProject(Project project, String projectName) {
-        for (Project p : repoProject.getAll()) {
-            if (p.getName().equals(projectName)) {
-                System.out.println("Proyecto:" + p.getName());
-                System.out.println("Descripcion:" + p.getDescription());
-                System.out.println("Creador del proyecto:" + p.getProjectCreator());
-                showAllCollaborators(p);
+    public void showProject(String projectName) {
+        for (Project project : repoProject.getAll()) {
+            if (project.getName().equals(projectName)) {
+                tabsView.showProject(project);
             }
         }
     }
@@ -66,6 +62,10 @@ public class RepoProjectController {
         }
     }
 
+    public Project getProject(String projectName){
+        return repoProject.getById(projectName);
+    }
+
     public boolean addCollaborator(Project project, User collaborator) {
         boolean addedCollaborator;
         if (project.getProjectCreator().equals(session.getLoggedInUser().getUsername())) {
@@ -86,18 +86,14 @@ public class RepoProjectController {
 
     public void showAllCollaborators(Project project) {
         for (User user : project.getCollaborators()) {
-            System.out.println("Colaborador: " + user.getName());
-            System.out.println("Username: " + user.getUsername());
-            System.out.println("Email: " + user.getEmail());
+            tabsView.showCollaborators(user);
         }
     }
 
     public void showCollaborator(Project project, String username) {
         for (User user : project.getCollaborators()) {
             if (user.getUsername().equals(username)) {
-                System.out.println("Colaborador: " + user.getName());
-                System.out.println("Username: " + user.getUsername());
-                System.out.println("Email: " + user.getEmail());
+                tabsView.showCollaborators(user);
             }
         }
     }

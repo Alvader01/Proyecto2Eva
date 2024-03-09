@@ -74,7 +74,8 @@ public class ProjectController {
     public void changeTaskStatus(Task task) {
         if (session.getLoggedInUser().getUsername().equals(task.getAssignedUser()) ||
                 project.getProjectCreator().equals(session.getLoggedInUser().getUsername())) {
-            int option = IO.readInt("1. Sin iniciar\n2. En progreso\n3. finalizado\nSelecciona el estado de la tarea deseado: \n");
+            MainView.changeStatus();
+            int option = IO.readInt("Selecciona el estado de la tarea deseado: \n");
 
             switch (option) {
                 case 1:
@@ -152,5 +153,9 @@ public class ProjectController {
         } else {
             MainView.showMessage("Solo el creador del proyecto puede cambiar el usuario asignado");
         }
+    }
+
+    public Task getTask(String taskName) {
+        return project.getById(taskName);
     }
 }

@@ -22,7 +22,7 @@ public class MainView implements IMainView {
     /**
      * Menu para inicio del programa.
      */
-    public static void showMenu(){
+    public void showMenu(){
         System.out.println("1. Iniciar sesión");
         System.out.println("2. Crear usuario");
         System.out.println("3. Cerrar programa");
