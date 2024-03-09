@@ -6,7 +6,7 @@ import Model.User;
 import java.security.NoSuchAlgorithmException;
 
 public interface ISession{
-    User login(String username, String password) throws NoSuchAlgorithmException;
+    boolean login(String username, String password) throws NoSuchAlgorithmException;
     User getLoggedInUser();
 
 }

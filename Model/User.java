@@ -2,10 +2,11 @@ package Model;
 
 import Utils.Security;
 
+import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.Objects;
 
-public class User {
+public class User implements Serializable {
     private String name;
     private String username;
     private String password;

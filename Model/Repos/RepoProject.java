@@ -2,11 +2,11 @@ package Model.Repos;
 
 import Interfaces.Repos.IRepository;
 import Model.Project;
-import Model.User;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class RepoProject extends Repository<Project, String> implements IRepository<Project, String> {
+public class RepoProject extends Repository<Project, String> implements IRepository<Project, String>, Serializable {
     private final static String FILENAME = "projects.bin";
     private static RepoProject _instance;
     List<Project> projects;
@@ -106,5 +106,9 @@ public class RepoProject extends Repository<Project, String> implements IReposit
      */
     public boolean save() {
         return save(FILENAME);
+    }
+
+    public Repository load() {
+        return load(FILENAME);
     }
 }

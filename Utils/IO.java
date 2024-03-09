@@ -14,10 +14,10 @@ public class IO {
      * @return el mensaje introducido
      */
     public static String readString(String message) {
-        System.out.println(message);
+        System.out.print(message);
         String input = "";
         try {
-            input = teclado.nextLine();
+            input = teclado.next();
         } catch (Exception e) {
             System.out.println("Error al leer la cadena.");
             // Limpia el buffer del scanner para evitar un bucle infinito
@@ -74,7 +74,6 @@ public class IO {
                     System.out.println("Error: La fecha no puede ser anterior a la fecha actual.");
                 }
             } catch (Exception e) {
-                System.out.println("Error: Formato de fecha incorrecto. Utiliza el formato dd-MM-yyyy.");
             }
         }
 
@@ -94,7 +93,7 @@ public class IO {
 
         while (!fechaValida) {
             try {
-                System.out.println(message);
+                System.out.print(message);
                 String dateString = teclado.nextLine();
 
                 // Intenta convertir la cadena a LocalDate
@@ -107,7 +106,6 @@ public class IO {
                     System.out.println("Error: La fecha no puede ser anterior a la fecha de inicio.");
                 }
             } catch (Exception e) {
-                System.out.println("Error: Formato de fecha incorrecto. Utiliza el formato dd-MM-yyyy.");
             }
         }
 
