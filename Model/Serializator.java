@@ -29,7 +29,7 @@ public class Serializator {
         )){
             result=(T)ois.readObject();
         }catch(IOException | ClassNotFoundException e){
-            //no hago nada por simplicidad
+            System.out.println(e.getMessage());
         }
         return result;
     }

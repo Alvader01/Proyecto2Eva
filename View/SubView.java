@@ -42,4 +42,12 @@ public class SubView {
         System.out.println("8. Volver");
 
     }
+
+    public static void showGap() {
+        System.out.println("══════════════════════════════════════════");
+        System.out.println("                                          ");
+        System.out.println("                                          ");
+        System.out.println("                                          ");
+        System.out.println("══════════════════════════════════════════");
+    }
 }

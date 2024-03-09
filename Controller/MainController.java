@@ -3,7 +3,6 @@ package Controller;
 import Model.Repos.RepoProject;
 import Model.Repos.RepoUser;
 import Model.Session;
-import Model.User;
 import Utils.IO;
 import View.MainView;
 
@@ -18,18 +17,13 @@ public class MainController {
     RepoProject repoProject = RepoProject.getInstance();
     RepoUser repoUser = RepoUser.getInstance();
 
-    public void run() {
-        try {
-            startMainMenu();
-        }catch (NoSuchAlgorithmException e){
-            e.fillInStackTrace();
-        }
-    }
-
     public void startMainMenu() throws NoSuchAlgorithmException {
+        repoUser.load();
+        repoProject.load();
+        view.showMainView();
         int option;
         do {
-            view.showMainView();
+
             view.showMenu();
             option = IO.readInt("Elige una opción: ");
             switch (option) {
