@@ -50,7 +50,6 @@ public class RepoUserController {
                 session.getLoggedInUser().getUsername().equals(userToUpdate.getUsername())) {
             userToUpdate.setName(newName);
             repoUser.update(userToUpdate);
-            MainView.showMessage("El nombre del usuario ha sido modificado exitosamente.");
         } else {
             MainView.showMessage("Solo el usuario puede modificar su nombre");
         }
@@ -69,7 +68,6 @@ public class RepoUserController {
                 session.getLoggedInUser().getUsername().equals(userToUpdate.getUsername())) {
             userToUpdate.setUsername(newUsername);
             repoUser.update(userToUpdate);
-            MainView.showMessage("El username del usuario ha sido modificado exitosamente.");
         } else {
             MainView.showMessage("Solo el usuario puede modificar su username");
         }
@@ -88,7 +86,6 @@ public class RepoUserController {
                 session.getLoggedInUser().getUsername().equals(userToUpdate.getUsername())) {
             userToUpdate.setPassword(newPassword);
             repoUser.update(userToUpdate);
-            MainView.showMessage("La contraseña del usuario ha sido modificado exitosamente.");
         } else {
             MainView.showMessage("Solo el usuario puede modificar su contraseña");
         }
@@ -106,7 +103,6 @@ public class RepoUserController {
                 session.getLoggedInUser().getUsername().equals(userToUpdate.getUsername())) {
             userToUpdate.setEmail(newEmail);
             repoUser.update(userToUpdate);
-            MainView.showMessage("El email del usuario ha sido modificado exitosamente.");
         } else {
             MainView.showMessage("Solo el usuario puede modificar su email");
         }

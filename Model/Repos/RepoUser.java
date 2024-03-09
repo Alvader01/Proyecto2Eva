@@ -3,9 +3,10 @@ package Model.Repos;
 import Interfaces.Repos.IRepository;
 import Model.User;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class RepoUser extends Repository<User, String> implements IRepository<User, String> {
+public class RepoUser extends Repository<User, String> implements IRepository<User, String>, Serializable  {
     private final static String FILENAME = "users.bin";
     private static RepoUser _instance;
     private Set<User> users;
@@ -104,5 +105,9 @@ public class RepoUser extends Repository<User, String> implements IRepository<Us
      */
     public boolean save() {
         return save(FILENAME);
+    }
+
+    public Repository load(){
+        return load(FILENAME);
     }
 }

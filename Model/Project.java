@@ -2,9 +2,10 @@ package Model;
 
 import Interfaces.Model.IProject;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class Project implements IProject {
+public class Project implements IProject, Serializable {
     private String name;
     private String description;
     private String projectCreator;

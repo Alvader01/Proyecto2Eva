@@ -2,12 +2,13 @@ package Model;
 
 import Interfaces.Model.ITask;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class Task implements ITask {
+public class Task implements ITask , Serializable {
     private String name;
     private String description;
     private LocalDate startDate;
@@ -16,6 +17,10 @@ public class Task implements ITask {
     private TaskState state;
     private List<String> comments;
 
+    public Task() {
+        this("", "", LocalDate.now(), LocalDate.now(), "", TaskState.WITHOUT_STARTING);
+        this.comments = new ArrayList<>();
+    }
 
     public Task(String name, String description, LocalDate startDate, LocalDate endDate, String assignedUser, TaskState state) {
         this.name = name;
