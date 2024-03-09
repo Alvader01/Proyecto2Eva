@@ -18,21 +18,20 @@ public class ProjectController {
      * @param project Proyecto donde añadir la tarea
      */
     public void createTask(Project project) {
+        Task newTask = new Task();
         String name = IO.readString("Introduce el nombre de la tarea: ");
         String description = IO.readString("Introduce la descripción de la tarea: ");
         LocalDate startDate = IO.readDate("Introduce la fecha de inicio de la tarea: ");
         LocalDate endDate = IO.readFinalDate("Introduce la fecha de finalización de la tarea: ", startDate);
-        String assignedUser = getAssignedUser();
-        Task newTask = new Task(name, description, startDate, endDate, assignedUser, TaskState.WITHOUT_STARTING);
+        String assignedUser = addAssignedUser(newTask);
+        newTask = new Task(name, description, startDate, endDate, assignedUser, TaskState.WITHOUT_STARTING);
 
-        // Verifica si la tarea ya existe en el proyecto
         if (!taskExists(name)) {
             project.addTask(newTask);
             MainView.showMessage("La tarea ha sido creada exitosamente");
         } else {
             MainView.showMessage("La tarea ya existe");
         }
-
     }
 
     private boolean taskExists(String name) {
@@ -78,30 +77,26 @@ public class ProjectController {
      * @param task Tarea en la que cambias el estado
      */
     public void changeTaskStatus(Task task) {
-        if (session.getLoggedInUser().getUsername().equals(task.getAssignedUser()) ||
-                project.getProjectCreator().equals(session.getLoggedInUser().getUsername())) {
-            MainView.changeStatus();
-            int option = IO.readInt("Selecciona el estado de la tarea deseado: \n");
-
-            switch (option) {
-                case 1:
-                    project.changeTaskStatus(task.getName(), TaskState.WITHOUT_STARTING);
-                    MainView.showMessage("Estado de la tarea cambiado a sin iniciar");
-                    break;
-                case 2:
-                    project.changeTaskStatus(task.getName(), TaskState.IN_PROGRES);
-                    MainView.showMessage("Estado de la tarea cambiado a en progreso");
-                    break;
-                case 3:
-                    project.changeTaskStatus(task.getName(), TaskState.FINISHED);
-                    MainView.showMessage("Estado de la tarea cambiado a completado");
-                    String choice = IO.readString("¿Desea borrar de la lista la tarea ya completada?(Si / No)");
-                    if (choice.equalsIgnoreCase("si")) {
-                        project.deleteTask(task.getName());
-                        MainView.showMessage("La tarea ha sido borrada");
-                    }
-                    break;
-            }
+        MainView.changeStatus();
+        int option = IO.readInt("Selecciona el estado de la tarea deseado: \n");
+        switch (option) {
+            case 1:
+                project.changeTaskStatus(task.getName(), TaskState.WITHOUT_STARTING);
+                MainView.showMessage("Estado de la tarea cambiado a sin iniciar");
+                break;
+            case 2:
+                project.changeTaskStatus(task.getName(), TaskState.IN_PROGRES);
+                MainView.showMessage("Estado de la tarea cambiado a en progreso");
+                break;
+            case 3:
+                project.changeTaskStatus(task.getName(), TaskState.FINISHED);
+                MainView.showMessage("Estado de la tarea cambiado a completado");
+                String choice = IO.readString("¿Desea borrar de la lista la tarea ya completada?(Si / No)");
+                if (choice.equalsIgnoreCase("si")) {
+                    project.deleteTask(task.getName());
+                    MainView.showMessage("La tarea ha sido borrada");
+                }
+                break;
         }
     }
 
@@ -129,18 +124,18 @@ public class ProjectController {
     }
 
     /**
-     * Obtener el usuario asignado a la tarea
+     * Añadir el username del usuario asignado a la tarea
      *
-     * @return El username del usuario
      */
-    public String getAssignedUser() {
-        String username = IO.readString("Introduce el nombre del usuario asignado: ");
-        String assignedUser = "";
+    public String addAssignedUser(Task task) {
+        String assignedUser;
+        assignedUser = IO.readString("Introduce el username del usuario asignado: ");
         for (User user : project.getCollaborators()) {
-            if (user.getUsername().equals(username)) {
-                assignedUser = username;
+            if (user.getUsername().equals(assignedUser)) {
+                project.updateAssignedUser(task, assignedUser);
+                MainView.showMessage("El usuario asignado ha sido añadido correctamente");
             } else {
-                MainView.showMessage("El usuario introducido no existe");
+                MainView.showMessage("El usuario no es colaborador en el proyecto");
             }
         }
         return assignedUser;
