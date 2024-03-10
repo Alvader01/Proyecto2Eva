@@ -169,7 +169,7 @@ public class SubController {
                         String collaboratorToAdd = IO.readString("Introduce el nombre de usuario del colaborador: ");
                         if (userController.userExists(collaboratorToAdd)) {
                             repoProjectController.addCollaborator(repoProjectController.getProject(projectToModify), userController.getUser(collaboratorToAdd));
-                            MainView.showMessage("El colaborador ha"+ collaboratorToAdd +" sido añadido exitosamente");
+                            MainView.showMessage("El colaborador "+ collaboratorToAdd +" ha sido añadido exitosamente");
                         } else {
                             MainView.showMessage("El colaborador no existe");
                         }
