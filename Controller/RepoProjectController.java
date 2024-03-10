@@ -52,7 +52,7 @@ public class RepoProjectController {
         }
     }
 
-        public void deleteProject(Project project) {
+    public void deleteProject(Project project) {
         if (project.getProjectCreator().equals(session.getLoggedInUser().getUsername())) {
             repoProject.delete(project.getName());
             MainView.showMessage("El proyecto ha sido eliminado exitosamente.");
