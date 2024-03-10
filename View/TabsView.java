@@ -46,7 +46,12 @@ public class TabsView implements ITabs {
         System.out.println("╔════════════════════════════════════════╗");
         System.out.println("║           Información de la Tarea      ║");
         System.out.println("╠════════════════════════════════════════╣");
-        System.out.println("║   Tareas: " + task.getName() + "  ║");
+        System.out.println("║   Nombre de la Tarea: " + task.getName() + "  ║");
+        System.out.println("║   Descripción: " + task.getDescription() + "║");
+        System.out.println("║   Fecha de Inicio: " + task.getStartDate() + "  ║");
+        System.out.println("║   Fecha de Fin: " + task.getEndDate() + "  ║");
+        System.out.println("║   Creador de la Tarea: " + task.getAssignedUser() + "  ║");
+        System.out.println("║   Estado: " + task.getState() + "  ║");
         System.out.println("╚════════════════════════════════════════╝");
     }
 
@@ -79,8 +84,6 @@ public class TabsView implements ITabs {
         System.out.println("║   Información de los Colaboradores     ║");
         System.out.println("╠════════════════════════════════════════╣");
         System.out.println("║   Colaborador: " + user.getName() + "  ║");
-        System.out.println("║   Usuario: " + user.getUsername() + "  ║");
-        System.out.println("║   Email: " + user.getEmail() + "       ║");
         System.out.println("╚════════════════════════════════════════╝");
     }
 
@@ -94,7 +97,6 @@ public class TabsView implements ITabs {
         System.out.println("║           Lista de usuarios            ║");
         System.out.println("╠════════════════════════════════════════╣");
         System.out.println("║   Usuario: " + user.getUsername() + "  ║");
-        System.out.println("║   Email: " + user.getEmail() + "    ║");
         System.out.println("╚════════════════════════════════════════╝");
     }
 
