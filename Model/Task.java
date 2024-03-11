@@ -100,4 +100,17 @@ public class Task implements ITask , Serializable {
     public int hashCode() {
         return Objects.hash(name);
     }
+
+    @Override
+    public String toString() {
+        return "Task{" +
+                "name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", startDate=" + startDate +
+                ", endDate=" + endDate +
+                ", assignedUser='" + assignedUser + '\'' +
+                ", state=" + state +
+                ", comments=" + comments +
+                '}';
+    }
 }
