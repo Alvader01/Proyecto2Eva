@@ -47,7 +47,7 @@ public class ProjectController {
 
     public void showAllTasks(Project project) {
         for (Task task : project.getTasks()) {
-            tabsView.showAllTask(task);
+            tabsView.showAllTasks(task);
         }
     }
 
