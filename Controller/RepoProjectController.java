@@ -12,6 +12,7 @@ public class RepoProjectController {
     private TabsView tabsView = new TabsView();
     private RepoProject repoProject = RepoProject.getInstance();
     private Session session = Session.getInstance();
+    ProjectController projectController = new ProjectController();
 
     public Project createProject() {
         Project newProject = new Project();
@@ -52,15 +53,17 @@ public class RepoProjectController {
         }
     }
 
-    public void deleteProject(Project project) {
-        if (project.getProjectCreator().equals(session.getLoggedInUser().getUsername())) {
-            repoProject.delete(project.getName());
-            MainView.showMessage("El proyecto ha sido eliminado exitosamente.");
+    public void deleteProject(Project projectToDelete) {
+        if (projectToDelete != null) {
+            if (projectToDelete.isCreator(Session.getInstance().getLoggedInUser())) {
+                repoProject.delete(projectToDelete.getName());
+            } else {
+                System.out.println("Error: No tienes permisos para eliminar el proyecto.");
+            }
         } else {
-            MainView.showMessage("Solo el creador del proyecto puede eliminar el proyecto.");
+            System.out.println("Error: El proyecto no existe.");
         }
     }
-
     public Project getProject(String projectName){
         return repoProject.getById(projectName);
     }
@@ -72,8 +75,6 @@ public class RepoProjectController {
             } else {
                 project.getCollaborators().add(collaborator);
             }
-        } else {
-            MainView.showMessage("Solo el creador del proyecto puede agregar colaboradores");
         }
     }
 
@@ -92,17 +93,11 @@ public class RepoProjectController {
     }
 
     public void removeCollaborator(Project project, User collaborator) {
-        if (!isProjectCreator(project, collaborator.getUsername())) {
-            MainView.showMessage("Solo el creador del proyecto puede eliminar colaboradores");
-        } else {
             if (collaboratorExists(project, collaborator.getUsername())) {
                 project.getCollaborators().remove(collaborator);
-                MainView.showMessage("El colaborador ha sido eliminado exitosamente.");
-            } else {
-                MainView.showMessage("El colaborador no existe en el proyecto.");
             }
-        }
     }
+
 
     public boolean isProjectCreator(Project project, String username) {
         return project.getProjectCreator().equals(username);

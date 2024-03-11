@@ -62,14 +62,15 @@ public class RepoProject extends Repository<Project, String> implements IReposit
      */
     @Override
     public boolean delete(String projectName) {
-        boolean projectDeleted = false;
-        for (Project project : projects) {
+        Iterator<Project> iterator = projects.iterator();
+        while (iterator.hasNext()) {
+            Project project = iterator.next();
             if (project.getName().equals(projectName)) {
-                projects.remove(project);
-                projectDeleted = true;
+                iterator.remove();
+                return true;
             }
         }
-        return projectDeleted;
+        return false;
     }
 
     /**

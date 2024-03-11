@@ -6,6 +6,9 @@ import Model.Task;
 import Model.TaskState;
 import Model.User;
 
+import java.util.Collection;
+import java.util.Collections;
+
 public class TabsView implements ITabs {
 
     /**
@@ -49,7 +52,7 @@ public class TabsView implements ITabs {
      *
      * @param task
      */
-    public void showAllTask(Task task) {
+    public void showAllTasks(Task task) {
         System.out.println("══════════════════════════════════════════");
         System.out.println("          Información de la Tarea       ");
         System.out.println("══════════════════════════════════════════");
@@ -57,7 +60,7 @@ public class TabsView implements ITabs {
         System.out.println("    Descripción: " + task.getDescription());
         System.out.println("    Fecha de Inicio: " + task.getStartDate());
         System.out.println("    Fecha de Fin: " + task.getEndDate());
-        System.out.println("    Creador de la Tarea: " + task.getAssignedUser());
+        System.out.println("    Usuario asignado: " + task.getAssignedUser());
         if (task.getState() == TaskState.WITHOUT_STARTING) {
             System.out.println("    Estado:  Sin iniciar");
         } else if (task.getState() == TaskState.IN_PROGRESS) {
@@ -102,7 +105,7 @@ public class TabsView implements ITabs {
      */
     public void showCollaborators(User user) {
         System.out.println("══════════════════════════════════════════");
-        System.out.println("    Colaborador                           ");
+        System.out.println("              Colaboradores               ");
         System.out.println("══════════════════════════════════════════");
         System.out.println("    Colaborador: " + user.getName());
         System.out.println("══════════════════════════════════════════");
@@ -111,14 +114,17 @@ public class TabsView implements ITabs {
     /**
      * Este metodo muestra la información de todos los usuarios.
      *
-     * @param user
+     * @param users
      */
-    public void showAllUser(User user) {
+    public void showAllUser(Collection<User> users) {
         System.out.println("══════════════════════════════════════════");
         System.out.println("            Lista de usuarios             ");
         System.out.println("══════════════════════════════════════════");
-        System.out.println("║   Usuario: " + user.getUsername());
-        System.out.println("╚═════════════════════════════════════════");
+        for (User user : users) {
+            System.out.println("     Usuario: " + user.getUsername());
+        }
+        System.out.println("══════════════════════════════════════════");
     }
+
 
 }
