@@ -10,9 +10,7 @@ import View.MainView;
 import View.SubView;
 import View.TabsView;
 
-import javax.swing.text.View;
 import java.security.NoSuchAlgorithmException;
-import java.util.function.Predicate;
 
 public class SubController {
     SubView subView = new SubView();
@@ -244,7 +242,7 @@ public class SubController {
 
                                 break;
                             case 2:
-                                String projectTasksShow = IO.readString("Introduce el nombre del proyecto al que quieres mostrar una tarea: ");
+                                String projectTasksShow = IO.readString("Introduce el nombre del proyecto del que quieres mostrar las tareas: ");
                                 Project tasks = repoProjectController.getProject(projectTasksShow);
                                 projectController.showAllTasks(tasks);
                                 break;
@@ -285,33 +283,31 @@ public class SubController {
                     saveAll();
                     break;
                 case 6: // Cambiar usuario asignado
-                    String changeUserAssigned = IO.readString("Introduce el nombre del nuevo usuario");
-                    if (userController.userExists(changeUserAssigned)) {
-                        String projectTaskChangeUser = IO.readString("Introduce el nombre del proyecto al que quieres cambiar el usuario asignado de la tarea: ");
-                        if (repoProjectController.projectExists(projectTaskChangeUser)) {
-                            String taskToChangeUser = IO.readString("Introduce el nombre de la tarea que quieres cambiar el usuario asignado: ");
-                            projectController.updateAssignedUser(projectController.getTask(taskToChangeUser), userController.getUser(changeUserAssigned).getUsername());
-                            saveAll();
-                            MainView.showMessage("El usuario asignado ha sido cambiado exitosamente");
-                        } else {
-                            MainView.showMessage("El proyecto no existe");
-                        }
-                    } else {
-                        MainView.showMessage("El usuario no existe");
-                    }
+                    String projectTaskChangeUser = IO.readString("Introduce el nombre del proyecto al que quieres cambiar el usuario asignado de la tarea: ");
+                    Project projectUsers = repoProjectController.getProject(projectTaskChangeUser);
+                    String taskToChangeUser = IO.readString("Introduce el nombre de la tarea que quieres cambiar el usuario asignado: ");
+                    Task task = projectController.getTask(projectUsers, taskToChangeUser);
+                    repoProjectController.showAllCollaborators(projectUsers);
+                    String changeUserAssigned = IO.readString("Introduce el nombre del usuario asignado nuevo: ");
+                    projectController.updateAssignedUser(projectUsers,task, changeUserAssigned);
+                    saveAll();
                     break;
                 case 7: // Crear comentario
                     String projectTaskComment = IO.readString("Introduce el nombre del proyecto al que quieres añadir un comentario: ");
-                    if (repoProjectController.projectExists(projectTaskComment)) {
+                    Project projectComment = repoProjectController.getProject(projectTaskComment);
+                    if (projectComment != null) {
                         String taskToComment = IO.readString("Introduce el nombre de la tarea que quieres comentar: ");
-                        String comment = IO.readString("Introduce el comentario: ");
-                        projectController.createComment(projectController.getTask(taskToComment), comment);
-                        MainView.showMessage("El comentario ha sido añadido exitosamente");
-                        saveAll();
+                        Task taskComment = projectController.getTask(projectComment, taskToComment);
+                        if (taskComment != null) {
+                            String comment = IO.readString("Introduce el comentario a añadir: ");
+                            projectController.createComment(projectComment, taskComment, comment);
+                            saveAll();
+                        } else {
+                            MainView.showMessage("La tarea no existe en el proyecto.");
+                        }
                     } else {
-                        MainView.showMessage("El proyecto no existe");
+                        MainView.showMessage("El proyecto no existe.");
                     }
-                    break;
             }
         } while (option != 8);
     }

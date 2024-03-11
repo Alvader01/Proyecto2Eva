@@ -44,10 +44,10 @@ public class SubView {
     }
 
     public static void showGap() {
-        System.out.println("══════════════════════════════════════════");
-        System.out.println("                                          ");
-        System.out.println("                                          ");
-        System.out.println("                                          ");
-        System.out.println("══════════════════════════════════════════");
+        System.out.println("- - - - - - - - - - - - - - - - - - - - - -");
+        System.out.println("                                           ");
+        System.out.println("                                           ");
+        System.out.println("                                           ");
+        System.out.println("- - - - - - - - - - - - - - - - - - - - - -");
     }
 }
