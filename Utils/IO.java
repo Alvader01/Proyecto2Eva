@@ -1,5 +1,7 @@
 package Utils;
 
+import View.MainView;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.InputMismatchException;
@@ -10,22 +12,21 @@ public class IO {
 
     /**
      * Este metodo lo que hace es mostrar un mensaje y leer una cadena.
-     * @param message el mensaje a mostrar
+     * @param msg el mensaje a mostrar
      * @return el mensaje introducido
      */
-    public static String readString(String message) {
-        System.out.print(message);
-        String input = "";
-        try {
-            input = teclado.next();
-        } catch (Exception e) {
-            System.out.println("Error al leer la cadena.");
-            // Limpia el buffer del scanner para evitar un bucle infinito
-            teclado.nextLine();
+    public static String readString(String msg) {
+
+        String input;
+        System.out.print(msg);
+        input = teclado.nextLine();
+        if (input.isEmpty() ||  input.isBlank()) {
+            do {
+                input = teclado.nextLine();
+            } while (input.isEmpty() ||  input.isBlank());
         }
         return input;
     }
-
     /**
      * Este metodo lo que hace es mostrar un mensaje y leer un entero.
      * @param message el mensaje a mostrar
