@@ -1,5 +1,6 @@
 package Controller;
 
+import Interfaces.Controller.IRepoUserController;
 import Model.Repos.RepoUser;
 import Model.Session;
 import Model.User;
@@ -10,7 +11,7 @@ import View.TabsView;
 import javax.swing.text.View;
 import java.security.NoSuchAlgorithmException;
 
-public class RepoUserController {
+public class RepoUserController implements IRepoUserController {
     RepoUser repoUser = RepoUser.getInstance();
     Session session = Session.getInstance();
     private TabsView tabsView = new TabsView();

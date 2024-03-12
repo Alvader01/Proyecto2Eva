@@ -1,5 +1,6 @@
 package Controller;
 
+import Interfaces.Controller.IRepoProjectController;
 import Model.Project;
 import Model.Repos.RepoProject;
 import Model.Session;
@@ -8,7 +9,7 @@ import Utils.IO;
 import View.MainView;
 import View.TabsView;
 
-public class RepoProjectController {
+public class RepoProjectController implements IRepoProjectController {
     private TabsView tabsView = new TabsView();
     private RepoProject repoProject = RepoProject.getInstance();
     private Session session = Session.getInstance();

@@ -1,5 +1,6 @@
 package Controller;
 
+import Interfaces.Controller.IProjectController;
 import Model.*;
 import Utils.IO;
 import View.MainView;
@@ -8,7 +9,7 @@ import View.TabsView;
 import java.time.LocalDate;
 import java.util.Iterator;
 
-public class ProjectController {
+public class ProjectController implements IProjectController {
     TabsView tabsView = new TabsView();
     Project project = new Project();
     Session session = Session.getInstance();
