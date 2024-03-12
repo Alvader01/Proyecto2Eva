@@ -1,5 +1,6 @@
 package Controller;
 
+import Interfaces.Controller.IMainController;
 import Model.Repos.RepoProject;
 import Model.Repos.RepoUser;
 import Model.Session;
@@ -8,7 +9,7 @@ import View.MainView;
 
 import java.security.NoSuchAlgorithmException;
 
-public class MainController {
+public class MainController implements IMainController {
 
     MainView view = new MainView();
     SubController subController = new SubController();

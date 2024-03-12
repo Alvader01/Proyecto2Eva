@@ -1,5 +1,6 @@
 package Controller;
 
+import Interfaces.Controller.ISubController;
 import Model.Project;
 import Model.Repos.RepoProject;
 import Model.Repos.RepoUser;
@@ -13,7 +14,7 @@ import View.TabsView;
 
 import java.security.NoSuchAlgorithmException;
 
-public class SubController {
+public class SubController implements ISubController {
     SubView subView = new SubView();
     Session session = Session.getInstance();
     ProjectController projectController = new ProjectController();
