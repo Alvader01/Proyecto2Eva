@@ -17,6 +17,10 @@ public class MainController {
     RepoProject repoProject = RepoProject.getInstance();
     RepoUser repoUser = RepoUser.getInstance();
 
+    /**
+     * Inicia el menu
+     * @throws NoSuchAlgorithmException
+     */
     public void startMainMenu() throws NoSuchAlgorithmException {
         repoUser.load();
         repoProject.load();
@@ -48,6 +52,9 @@ public class MainController {
         } while (option != 3);
     }
 
+    /**
+     * Para el programa y guarda.
+     */
     public void stop(){
         repoProject.save();
         repoUser.save();
