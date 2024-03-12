@@ -132,9 +132,9 @@ public class RepoProjectController {
      * @param collaborator colaborador
      */
     public void removeCollaborator(Project project, User collaborator) {
-            if (collaboratorExists(project, collaborator.getUsername())) {
-                project.getCollaborators().remove(collaborator);
-            }
+        if (collaboratorExists(project, collaborator.getUsername())) {
+            project.getCollaborators().remove(collaborator);
+        }
     }
 
 
