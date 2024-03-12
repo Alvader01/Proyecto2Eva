@@ -20,7 +20,6 @@ public class IO {
             input = teclado.next();
         } catch (Exception e) {
             System.out.println("Error al leer la cadena.");
-            // Limpia el buffer del scanner para evitar un bucle infinito
             teclado.nextLine();
         }
         return input;
@@ -64,10 +63,8 @@ public class IO {
                 System.out.print(message);
                 String dateString = teclado.nextLine();
 
-                // Intenta convertir la cadena a LocalDate
                 inputDate = LocalDate.parse(dateString, formatter);
 
-                // Verifica si la fecha ingresada no es anterior a la fecha actual
                 if (inputDate.isAfter(LocalDate.now())) {
                     fechaValida = true;
                 } else {
@@ -96,10 +93,8 @@ public class IO {
                 System.out.print(message);
                 String dateString = teclado.nextLine();
 
-                // Intenta convertir la cadena a LocalDate
                 inputDate = LocalDate.parse(dateString, formatter);
 
-                // Verifica si la fecha ingresada no es anterior a la fecha de inicio
                 if (!inputDate.isBefore(startDate)) {
                     fechaValida = true;
                 } else {
