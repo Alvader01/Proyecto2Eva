@@ -5,12 +5,15 @@ import Model.Session;
 import Model.User;
 import Utils.IO;
 import View.MainView;
+import View.TabsView;
 
+import javax.swing.text.View;
 import java.security.NoSuchAlgorithmException;
 
 public class RepoUserController {
     RepoUser repoUser = RepoUser.getInstance();
     Session session = Session.getInstance();
+    private TabsView tabsView = new TabsView();
 
     /**
      * Añade usuario a la lista de usuarios
@@ -29,9 +32,8 @@ public class RepoUserController {
     }
 
     public void showAllUsers() {
-        for (User user : repoUser.getAll()) {
-            System.out.println(user);
-        }
+        tabsView.showAllUser(repoUser.getAll());
+
     }
 
     public void showUser(User user) {

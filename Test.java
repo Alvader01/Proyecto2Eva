@@ -8,9 +8,9 @@ import java.security.NoSuchAlgorithmException;
 public class Test {
     RepoUser repoUser = RepoUser.getInstance();
     public static void main(String[] args) throws NoSuchAlgorithmException {
-    RepoUserController repoUserController = new RepoUserController();
-    repoUserController.createUser();
-    repoUserController.showAllUsers();
+        RepoUserController repoUserController = new RepoUserController();
+        repoUserController.createUser();
+        repoUserController.showAllUsers();
 
     }
 

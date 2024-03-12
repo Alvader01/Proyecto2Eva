@@ -6,6 +6,7 @@ import View.MainView;
 import View.TabsView;
 
 import java.time.LocalDate;
+import java.util.Iterator;
 
 public class ProjectController {
     TabsView tabsView = new TabsView();
@@ -44,21 +45,23 @@ public class ProjectController {
         return taskExists;
     }
 
-    public void showAllTasks() {
+    public void showAllTasks(Project project) {
         for (Task task : project.getTasks()) {
-            tabsView.showAllTask(task);
+            tabsView.showAllTasks(task);
         }
     }
 
-    public void showTask(String taskName) {
+    public void showTask(Project project, String taskName) {
         for (Task task : project.getTasks()) {
             if (task.getName().equals(taskName)) {
                 tabsView.showTask(task);
+            }else{
+                MainView.showMessage("La tarea no existe");
             }
         }
     }
 
-    public void updateTaskName(String name, String newName) {
+    public void updateTaskName(Project project, String name, String newName) {
         Task taskToUpdate = project.getById(name);
         if (taskToUpdate != null &&
                 session.getLoggedInUser().getUsername().equals(project.getProjectCreator())) {
@@ -74,43 +77,53 @@ public class ProjectController {
     /**
      * Con este método cambiamos los estados de las tareas
      *
-     * @param task Tarea en la que cambias el estado
+     * @param project Proyecto Tarea en la que cambias el estado
      */
-    public void changeTaskStatus(Task task) {
-        MainView.changeStatus();
-        int option = IO.readInt("Selecciona el estado de la tarea deseado: \n");
-        switch (option) {
-            case 1:
-                project.changeTaskStatus(task.getName(), TaskState.WITHOUT_STARTING);
-                MainView.showMessage("Estado de la tarea cambiado a sin iniciar");
-                break;
-            case 2:
-                project.changeTaskStatus(task.getName(), TaskState.IN_PROGRES);
-                MainView.showMessage("Estado de la tarea cambiado a en progreso");
-                break;
-            case 3:
-                project.changeTaskStatus(task.getName(), TaskState.FINISHED);
-                MainView.showMessage("Estado de la tarea cambiado a completado");
-                String choice = IO.readString("¿Desea borrar de la lista la tarea ya completada?(Si / No)");
-                if (choice.equalsIgnoreCase("si")) {
-                    project.deleteTask(task.getName());
-                    MainView.showMessage("La tarea ha sido borrada");
-                }
-                break;
-        }
-    }
-
-    public void deleteTask(String taskName) {
+    public void changeTaskStatus(Project project, String taskName) {
         for (Task task : project.getTasks()) {
-            if (task.getName().equals(taskName) && Session.getInstance().getLoggedInUser().getUsername().equals(project.getProjectCreator())) {
-                project.deleteTask(task.getName());
-            } else {
-                MainView.showMessage("La tarea no existe o no eres el creador del proyecto");
+            if (task.getName().equals(taskName)) {
+                MainView.changeStatus();
+                int option = IO.readInt("Selecciona el estado de la tarea deseado: ");
+                switch (option) {
+                    case 1:
+                        project.changeTaskStatus(task.getName(), TaskState.WITHOUT_STARTING);
+                        MainView.showMessage("Estado de la tarea cambiado a sin iniciar");
+                        break;
+                    case 2:
+                        project.changeTaskStatus(task.getName(), TaskState.IN_PROGRESS);
+                        MainView.showMessage("Estado de la tarea cambiado a en progreso");
+                        break;
+                    case 3:
+                        project.changeTaskStatus(task.getName(), TaskState.FINISHED);
+                        MainView.showMessage("Estado de la tarea cambiado a completado");
+                        String choice = IO.readString("¿Desea borrar de la lista la tarea ya completada?(Si / No)");
+                        if (choice.equalsIgnoreCase("si")) {
+                            project.deleteTask(task.getName());
+                            MainView.showMessage("La tarea ha sido borrada");
+                        }
+                        break;
+                }
             }
         }
     }
+    public void deleteTask(Project project, String taskName) {
+        if (Session.getInstance().getLoggedInUser().getUsername().equals(project.getProjectCreator())) {
+            Iterator<Task> iterator = project.getTasks().iterator();
+            while (iterator.hasNext()) {
+                Task task = iterator.next();
+                if (task.getName().equals(taskName)) {
+                    iterator.remove();  // Utiliza el iterador para eliminar la tarea de forma segura
+                    return;
+                }
+            }
+            MainView.showMessage("La tarea no existe");
+        } else {
+            MainView.showMessage("No eres el creador del proyecto");
+        }
+    }
 
-    public void createComment(Task task, String comment) {
+
+    public void createComment(Project project, Task task, String comment) {
         if (session.getLoggedInUser().getUsername().equals(task.getAssignedUser()) ||
                 project.getProjectCreator().equals(session.getLoggedInUser().getUsername())) {
             if (task.getComments().contains(comment)) {
@@ -141,7 +154,7 @@ public class ProjectController {
         return assignedUser;
     }
 
-    public void updateAssignedUser(Task task, String username) {
+    public void updateAssignedUser(Project project, Task task, String username) {
         if (project.getProjectCreator().equals(session.getLoggedInUser().getUsername())) {
             project.updateAssignedUser(task, username);
             MainView.showMessage("Usuario asignado actualizado correctamente");
@@ -150,7 +163,7 @@ public class ProjectController {
         }
     }
 
-    public Task getTask(String taskName) {
+    public Task getTask(Project project, String taskName) {
         return project.getById(taskName);
     }
 }

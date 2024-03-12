@@ -1,11 +1,13 @@
 package Model;
 
 import Interfaces.Model.IProject;
+import Model.Repos.RepoProject;
 
 import java.io.Serializable;
 import java.util.*;
 
 public class Project implements IProject, Serializable {
+    private static RepoProject _instance;
     private String name;
     private String description;
     private String projectCreator;
@@ -144,6 +146,10 @@ public class Project implements IProject, Serializable {
             }
         }
         return assignedUser;
+    }
+
+    public boolean isCreator(User user) {
+        return this.getProjectCreator().equals(user.getUsername());
     }
 
     @Override

@@ -1,12 +1,16 @@
 package Controller;
 
 import Model.Project;
+import Model.Repos.RepoProject;
+import Model.Repos.RepoUser;
 import Model.Session;
+import Model.Task;
+import Model.User;
 import Utils.IO;
 import View.MainView;
 import View.SubView;
+import View.TabsView;
 
-import javax.swing.text.View;
 import java.security.NoSuchAlgorithmException;
 
 public class SubController {
@@ -15,6 +19,10 @@ public class SubController {
     ProjectController projectController = new ProjectController();
     RepoProjectController repoProjectController = new RepoProjectController();
     RepoUserController userController = new RepoUserController();
+    RepoUser repoUser = RepoUser.getInstance();
+    RepoProject repoProject = RepoProject.getInstance();
+    TabsView tabsView = new TabsView();
+
 
     /**
      * Menu de nuestra primera opción
@@ -59,6 +67,7 @@ public class SubController {
                 case 1: // Crear proyecto
                     Project project = repoProjectController.createProject();
                     repoProjectController.showProject(project.getName());
+                    saveAll();
                     break;
                 case 2: // Modificar proyecto
                     menuModifyProject();
@@ -84,8 +93,18 @@ public class SubController {
                     break;
                 case 4: // Borrar proyecto
                     String projectName = IO.readString("Introduce el nombre del proyecto que quieres borrar: ");
-                    Project deleteProject = repoProjectController.getProject(projectName);
-                    repoProjectController.deleteProject(deleteProject);
+                    Project projectToDelete = repoProjectController.getProject(projectName);
+                    if (projectToDelete != null) {
+                        if (projectToDelete.isCreator(Session.getInstance().getLoggedInUser())) {
+                            // El usuario es el creador del proyecto
+                            repoProjectController.deleteProject(projectToDelete);
+                            saveAll();
+                        } else {
+                            System.out.println("Solo el creador del proyecto puede eliminar el proyecto.");
+                        }
+                    } else {
+                        System.out.println("El proyecto no existe.");
+                    }
                     break;
             }
         } while (option != 5);
@@ -109,6 +128,7 @@ public class SubController {
                     if (!newName.equals(name)) {
                         userController.updateName(name, newName);
                         MainView.showMessage("El nombre ha sido cambiado con exito");
+                        saveAll();
                     } else {
                         MainView.showMessage("El nuevo nombre de usuario es el mismo que tienes actualmente");
                     }
@@ -119,6 +139,7 @@ public class SubController {
                     if (!newUsername.equals(username)) {
                         userController.updateUsername(username, newUsername);
                         MainView.showMessage("El nombre de usuario ha sido cambiado con exito");
+                        saveAll();
                     } else {
                         MainView.showMessage("El nuevo nombre de usuario es el mismo que tienes actualmente");
                     }
@@ -128,12 +149,14 @@ public class SubController {
                     String newPassword = IO.readString("Introduce la contraseña nueva: ");
                     userController.updatePassword(user1name, newPassword);
                     MainView.showMessage("Tu contraseña ha sido cambiada máquinista");
+                    saveAll();
                     break;
                 case 4: // Cambiar email
                     String newEmail = userController.getEmailWithFormat();
                     if (!newEmail.equals(session.getLoggedInUser().getEmail())) {
                         userController.updateEmail(session.getLoggedInUser().getUsername(), newEmail);
                         MainView.showMessage("El email ha sido cambiado con exito");
+                        saveAll();
                     } else {
                         MainView.showMessage("El nuevo email es el mismo que tienes actualmente");
                     }
@@ -155,36 +178,58 @@ public class SubController {
                 case 1: // Cambiar nombre
                     String projectName = IO.readString("Introduce el nombre del proyecto que quieres modificar: ");
                     Project project = repoProjectController.getProject(projectName);
-                    if (repoProjectController.projectExists(project.getName())) {
-                        String newProjectName = IO.readString("Introduce el nuevo nombre del proyecto: ");
-                        repoProjectController.updateName(project.getName(), newProjectName);
-                        MainView.showMessage("El nombre del proyecto ha sido modificado exitosamente");
+                    if (project != null) {
+                        if (project.isCreator(Session.getInstance().getLoggedInUser())) {
+                            String newProjectName = IO.readString("Introduce el nuevo nombre del proyecto: ");
+                            repoProjectController.updateName(project.getName(), newProjectName);
+                            MainView.showMessage("El nombre del proyecto ha sido modificado exitosamente");
+                            saveAll();
+                        } else {
+                            MainView.showMessage("Solo el creador del proyecto puede cambiar el nombre.");
+                        }
                     } else {
                         MainView.showMessage("El proyecto no existe");
                     }
                     break;
                 case 2: // Añadir colaborador
-                    String projectToModify = IO.readString("Introduce el nombre del proyecto al que añadir el colaborador: ");
-                    if (projectToModify.equals(repoProjectController.getProject(projectToModify).getName())) {
-                        String collaboratorToAdd = IO.readString("Introduce el nombre de usuario del colaborador: ");
-                        if (userController.userExists(collaboratorToAdd)) {
-                            repoProjectController.addCollaborator(repoProjectController.getProject(projectToModify), userController.getUser(collaboratorToAdd));
-                            MainView.showMessage("El colaborador ha"+ collaboratorToAdd +" sido añadido exitosamente");
+                    String projectNameToAddCollaborator = IO.readString("Introduce el nombre del proyecto al que añadir el colaborador: ");
+                    Project projectToAddCollaborator = repoProjectController.getProject(projectNameToAddCollaborator);
+                    if (projectToAddCollaborator != null) {
+                        if (projectToAddCollaborator.isCreator(Session.getInstance().getLoggedInUser())) {
+                            userController.showAllUsers();
+                            String collaboratorToAdd = IO.readString("Introduce el nombre de usuario del colaborador: ");
+                            if (userController.userExists(collaboratorToAdd)) {
+                                repoProjectController.addCollaborator(projectToAddCollaborator, userController.getUser(collaboratorToAdd));
+                                saveAll();
+                            } else {
+                                MainView.showMessage("El usuario no existe");
+                            }
                         } else {
-                            MainView.showMessage("El colaborador no existe");
+                            MainView.showMessage("Solo el creador del proyecto puede añadir un colaborador.");
                         }
+                    } else {
+                        MainView.showMessage("El proyecto no existe");
                     }
                     break;
                 case 3: // Borrar colaborador
                     String projectModify = IO.readString("Introduce el nombre del proyecto al que añadir el colaborador: ");
-                    if (projectModify.equals(repoProjectController.getProject(projectModify).getName())) {
-                        String collaboratorToRemove = IO.readString("Introduce el nombre de usuario del colaborador: ");
-                        if (userController.userExists(collaboratorToRemove)) {
-                            repoProjectController.removeCollaborator(repoProjectController.getProject(projectModify), userController.getUser(collaboratorToRemove));
-                            MainView.showMessage("El colaborador ha sido eliminado exitosamente");
+                    Project projectToRemoveCollaborator = repoProjectController.getProject(projectModify);
+                    if (projectToRemoveCollaborator != null) {
+                        if (projectToRemoveCollaborator.isCreator(Session.getInstance().getLoggedInUser())) {
+                            repoProjectController.showAllCollaborators(projectToRemoveCollaborator);
+                            String collaboratorToRemove = IO.readString("Introduce el nombre del colaborador que quieres eliminar: ");
+                            if (userController.userExists(collaboratorToRemove)) {
+                                repoProjectController.removeCollaborator(projectToRemoveCollaborator, userController.getUser(collaboratorToRemove));
+                                MainView.showMessage("El colaborador ha sido eliminado exitosamente");
+                                saveAll();
+                            } else {
+                                MainView.showMessage("El colaborador no existe");
+                            }
                         } else {
-                            MainView.showMessage("El colaborador no existe");
+                            MainView.showMessage("Solo el creador del proyecto puede eliminar un colaborador.");
                         }
+                    } else {
+                        MainView.showMessage("El proyecto no existe");
                     }
                     break;
                 case 4: // Modificar tareas
@@ -204,7 +249,13 @@ public class SubController {
                 case 1: // Añadir tarea
                     String projectTask = IO.readString("Introduce el nombre del proyecto al que quieres añadir una tarea: ");
                     if (repoProjectController.projectExists(projectTask)) {
-                        projectController.createTask(repoProjectController.getProject(projectTask));
+                        Project project = repoProjectController.getProject(projectTask);
+                        if (project.isCreator(Session.getInstance().getLoggedInUser())) {
+                            projectController.createTask(project);
+                            saveAll();
+                        } else {
+                            MainView.showMessage("Solo el creador del proyecto puede añadir una tarea.");
+                        }
                     } else {
                         MainView.showMessage("El proyecto no existe");
                     }
@@ -219,73 +270,141 @@ public class SubController {
                         innerOption = IO.readInt("Elige una opción: ");
                         switch (innerOption) {
                             case 1:
-                                String taskName = IO.readString("Introduce el nombre de la tarea que quieres mostrar: ");
-                                projectController.showTask(taskName);
+                                String projectTaskShow = IO.readString("Introduce el nombre del proyecto al que quieres mostrar una tarea: ");
+                                Project project = repoProjectController.getProject(projectTaskShow);
+                                String taskToShow = IO.readString("Introduce el nombre de la tarea que quieres mostrar: ");
+                                projectController.showTask(project, taskToShow);
+
                                 break;
                             case 2:
-                                projectController.showAllTasks();
+                                String projectTasksShow = IO.readString("Introduce el nombre del proyecto del que quieres mostrar las tareas: ");
+                                Project tasks = repoProjectController.getProject(projectTasksShow);
+                                projectController.showAllTasks(tasks);
                                 break;
                         }
                     } while (innerOption != 3);
                     break;
                 case 3: // Cambiar nombre
                     String projectTaskRename = IO.readString("Introduce el nombre del proyecto al que quieres cambiar el nombre de una tarea: ");
-                    if (repoProjectController.projectExists(projectTaskRename)) {
+                    Project projectUName = repoProjectController.getProject(projectTaskRename);
+                    if (repoProjectController.projectExists(projectUName.getName())){
                         String taskToRename = IO.readString("Introduce el nombre de la tarea que quieres cambiar el nombre: ");
                         String newTaskName = IO.readString("Introduce el nuevo nombre de la tarea: ");
-                        projectController.updateTaskName(taskToRename, newTaskName);
-                        MainView.showMessage("El nombre de la tarea ha sido cambiado exitosamente");
+                        if (projectUName.isCreator(Session.getInstance().getLoggedInUser())) {
+                            projectController.updateTaskName(projectUName, taskToRename, newTaskName);
+                            saveAll();
+                        } else {
+                            MainView.showMessage("Solo el creador del proyecto puede cambiar el nombre de una tarea");
+                        }
                     } else {
                         MainView.showMessage("El proyecto no existe");
                     }
                     break;
+
                 case 4:// Eliminar tarea
                     String projectTaskDelete = IO.readString("Introduce el nombre del proyecto al que quieres borrar una tarea: ");
-                    if (repoProjectController.projectExists(projectTaskDelete)) {
+                    Project projectTDelete = repoProjectController.getProject(projectTaskDelete);
+                    if (repoProjectController.projectExists(projectTDelete.getName())) {
                         String taskToDelete = IO.readString("Introduce el nombre de la tarea que quieres borrar: ");
-                        projectController.deleteTask(taskToDelete);
-                        MainView.showMessage("La tarea ha sido eliminada exitosamente");
+                        if (projectTDelete.isCreator(Session.getInstance().getLoggedInUser())) {
+                            projectController.deleteTask(projectTDelete, taskToDelete);
+                            saveAll();
+                            MainView.showMessage("La tarea ha sido eliminada exitosamente");
+                        } else {
+                            MainView.showMessage("Solo el creador del proyecto puede eliminar una tarea");
+                        }
                     } else {
                         MainView.showMessage("El proyecto no existe");
                     }
                     break;
                 case 5: // Cambiar el estado
                     String projectTaskStatus = IO.readString("Introduce el nombre del proyecto al que quieres cambiar el estado de una tarea: ");
-                    if (repoProjectController.projectExists(projectTaskStatus)) {
+                    Project project = repoProjectController.getProject(projectTaskStatus);
+                    if (project != null) {
                         String taskToChangeStatus = IO.readString("Introduce el nombre de la tarea que quieres cambiar el estado: ");
-                        projectController.changeTaskStatus(projectController.getTask(taskToChangeStatus));
-                        MainView.showMessage("El estado de la tarea ha sido cambiado exitosamente");
+                        Task selectedTask = null;
+                        for (Task task : project.getTasks()) {
+                            if (task.getName().equals(taskToChangeStatus)) {
+                                selectedTask = task;
+                                break;
+                            }
+                        }
+                        if (selectedTask != null && (project.isCreator(Session.getInstance().getLoggedInUser()) ||
+                                selectedTask.getAssignedUser().equals(Session.getInstance().getLoggedInUser().getUsername()))) {
+                            projectController.changeTaskStatus(project, taskToChangeStatus);
+                            saveAll();
+                        } else if (selectedTask == null) {
+                            MainView.showMessage("La tarea no existe en el proyecto");
+                        } else {
+                            MainView.showMessage("Solo el creador del proyecto o el usuario asignado a la tarea pueden cambiar el estado");
+                        }
                     } else {
                         MainView.showMessage("El proyecto no existe");
                     }
                     break;
                 case 6: // Cambiar usuario asignado
-                    String changeUserAssigned = IO.readString("Introduce el nombre del nuevo usuario");
-                    if (userController.userExists(changeUserAssigned)) {
-                        String projectTaskChangeUser = IO.readString("Introduce el nombre del proyecto al que quieres cambiar el usuario asignado de la tarea: ");
-                        if (repoProjectController.projectExists(projectTaskChangeUser)) {
-                            String taskToChangeUser = IO.readString("Introduce el nombre de la tarea que quieres cambiar el usuario asignado: ");
-                            projectController.updateAssignedUser(projectController.getTask(taskToChangeUser), userController.getUser(changeUserAssigned).getUsername());
-                            MainView.showMessage("El usuario asignado ha sido cambiado exitosamente");
+                    String projectTaskChangeUser = IO.readString("Introduce el nombre del proyecto al que quieres cambiar el usuario asignado de la tarea: ");
+                    Project projectUsers = repoProjectController.getProject(projectTaskChangeUser);
+
+                    if (projectUsers != null) {
+                        String taskToChangeUser = IO.readString("Introduce el nombre de la tarea que quieres cambiar el usuario asignado: ");
+                        Task task = projectController.getTask(projectUsers, taskToChangeUser);
+
+                        if (task != null) {
+                            // Verificar si el usuario conectado es el creador del proyecto
+                            if (projectUsers.isCreator(Session.getInstance().getLoggedInUser())) {
+                                repoProjectController.showAllCollaborators(projectUsers);
+                                String changeUserAssigned = IO.readString("Introduce el nombre del usuario asignado nuevo: ");
+                                // Verificar si el usuario nuevo asignado es un colaborador del proyecto
+                                if (repoProjectController.collaboratorExists(projectUsers, changeUserAssigned)) {
+                                    projectController.updateAssignedUser(projectUsers, task, changeUserAssigned);
+                                    saveAll();
+                                } else {
+                                    MainView.showMessage("El usuario asignado debe ser un colaborador del proyecto.");
+                                }
+                            } else {
+                                MainView.showMessage("Solo el creador del proyecto puede cambiar el usuario asignado de la tarea.");
+                            }
                         } else {
-                            MainView.showMessage("El proyecto no existe");
+                            MainView.showMessage("Esta tarea no existe.");
                         }
                     } else {
-                        MainView.showMessage("El usuario no existe");
+                        MainView.showMessage("Este proyecto no existe.");
                     }
+
                     break;
                 case 7: // Crear comentario
                     String projectTaskComment = IO.readString("Introduce el nombre del proyecto al que quieres añadir un comentario: ");
-                    if (repoProjectController.projectExists(projectTaskComment)) {
+                    Project projectComment = repoProjectController.getProject(projectTaskComment);
+
+                    if (projectComment != null) {
                         String taskToComment = IO.readString("Introduce el nombre de la tarea que quieres comentar: ");
-                        String comment = IO.readString("Introduce el comentario: ");
-                        projectController.createComment(projectController.getTask(taskToComment), comment);
-                        MainView.showMessage("El comentario ha sido añadido exitosamente");
+                        Task taskComment = projectController.getTask(projectComment, taskToComment);
+
+                        if (taskComment != null) {
+                            User loggedInUser = Session.getInstance().getLoggedInUser();
+                            // Verificar si el usuario conectado es el creador del proyecto o está asignado a la tarea
+                            if (projectComment.isCreator(loggedInUser) ||
+                                    taskComment.getAssignedUser().equals(Session.getInstance().getLoggedInUser().getUsername())) {
+                                String comment = IO.readString("Introduce el comentario a añadir: ");
+                                projectController.createComment(projectComment, taskComment, comment);
+                                saveAll();
+                            } else {
+                                MainView.showMessage("Solo el creador del proyecto o los usuarios asignados a la tarea pueden añadir comentarios.");
+                            }
+                        } else {
+                            MainView.showMessage("La tarea no existe en el proyecto.");
+                        }
                     } else {
-                        MainView.showMessage("El proyecto no existe");
+                        MainView.showMessage("El proyecto no existe.");
                     }
                     break;
             }
         } while (option != 8);
+    }
+
+    public void saveAll(){
+        repoProject.save();
+        repoUser.save();
     }
 }
