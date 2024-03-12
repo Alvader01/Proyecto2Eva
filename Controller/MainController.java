@@ -9,7 +9,6 @@ import View.MainView;
 import java.security.NoSuchAlgorithmException;
 
 public class MainController{
-
     MainView view = new MainView();
     SubController subController = new SubController();
     RepoUserController userController = new RepoUserController();
