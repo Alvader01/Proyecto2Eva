@@ -23,7 +23,11 @@ public class RepoUserController implements IRepoUserController {
         String name = IO.readString("Introduce el nombre: ");
         String username = IO.readString("Introduce el nombre de usuario: ");
         String password = IO.readString("Introduce la contraseña: ");
-        String email = getEmailWithFormat();
+        String email;
+        do {
+            email = getEmailWithFormat();
+        }while (!isValidEmailFormat(email));
+
         if (!userExists(username) || isEmailUnique(email)) {
             User newUser = new User(name, username, password, email);
             repoUser.create(newUser);
