@@ -35,6 +35,11 @@ public class ProjectController {
         }
     }
 
+    /**
+     * Tarea existe
+     * @param name nombre
+     * @return la tarea existente
+     */
     private boolean taskExists(String name) {
         boolean taskExists = false;
         for (Task task : project.getTasks()) {
@@ -45,12 +50,21 @@ public class ProjectController {
         return taskExists;
     }
 
+    /**
+     * Muestra todas las tareas
+     * @param project de un proyecto
+     */
     public void showAllTasks(Project project) {
         for (Task task : project.getTasks()) {
             tabsView.showAllTasks(task);
         }
     }
 
+    /**
+     * Muestra la tarea de un proyecto
+     * @param project nombre
+     * @param taskName nombre de la tarea
+     */
     public void showTask(Project project, String taskName) {
         for (Task task : project.getTasks()) {
             if (task.getName().equals(taskName)) {
@@ -61,6 +75,12 @@ public class ProjectController {
         }
     }
 
+    /**
+     * Actualiza el nombre de la tarea
+     * @param project el proyecto
+     * @param name el nombre
+     * @param newName el nuevo nombre
+     */
     public void updateTaskName(Project project, String name, String newName) {
         Task taskToUpdate = project.getById(name);
         if (taskToUpdate != null &&
