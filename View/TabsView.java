@@ -101,13 +101,15 @@ public class TabsView implements ITabs {
     /**
      * Este metodo muestra la información de los colaboradores.
      *
-     * @param user
+     * @param project
      */
-    public void showCollaborators(User user) {
+    public void showCollaborators(Project project) {
         System.out.println("══════════════════════════════════════════");
         System.out.println("              Colaboradores               ");
         System.out.println("══════════════════════════════════════════");
-        System.out.println("    Colaborador: " + user.getName());
+        for (User user : project.getCollaborators()) {
+            System.out.println("    Usuario: " + user.getUsername());
+        }
         System.out.println("══════════════════════════════════════════");
     }
 
