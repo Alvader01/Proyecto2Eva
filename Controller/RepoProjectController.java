@@ -109,22 +109,7 @@ public class RepoProjectController implements IRepoProjectController {
      * @param project recibe el proyecto
      */
     public void showAllCollaborators(Project project) {
-        for (User user : project.getCollaborators()) {
-            tabsView.showCollaborators(user);
-        }
-    }
-
-    /**
-     * Muestra colaboradores
-     * @param project nombre del proyecto
-     * @param username nombre del usuario
-     */
-    public void showCollaborator(Project project, String username) {
-        for (User user : project.getCollaborators()) {
-            if (user.getUsername().equals(username)) {
-                tabsView.showCollaborators(user);
-            }
-        }
+        tabsView.showCollaborators(project);
     }
 
     /**
