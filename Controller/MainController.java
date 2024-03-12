@@ -1,6 +1,5 @@
 package Controller;
 
-import Interfaces.Controller.IMainController;
 import Model.Repos.RepoProject;
 import Model.Repos.RepoUser;
 import Model.Session;
@@ -9,7 +8,7 @@ import View.MainView;
 
 import java.security.NoSuchAlgorithmException;
 
-public class MainController implements IMainController {
+public class MainController {
 
     MainView view = new MainView();
     SubController subController = new SubController();
@@ -18,6 +17,10 @@ public class MainController implements IMainController {
     RepoProject repoProject = RepoProject.getInstance();
     RepoUser repoUser = RepoUser.getInstance();
 
+    /**
+     * Inicia el menu
+     * @throws NoSuchAlgorithmException
+     */
     public void startMainMenu() throws NoSuchAlgorithmException {
         repoUser.load();
         repoProject.load();
@@ -49,6 +52,9 @@ public class MainController implements IMainController {
         } while (option != 3);
     }
 
+    /**
+     * Para el programa y guarda.
+     */
     public void stop(){
         repoProject.save();
         repoUser.save();

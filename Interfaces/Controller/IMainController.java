@@ -4,6 +4,5 @@ import java.security.NoSuchAlgorithmException;
 
 public interface IMainController {
 
-    void startMainMenu() throws NoSuchAlgorithmException;
-    void stop();
+    public void run() throws NoSuchAlgorithmException;
 }

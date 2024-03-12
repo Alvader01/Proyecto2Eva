@@ -79,6 +79,11 @@ public class Project implements IProject, Serializable {
         return tasks;
     }
 
+    /**
+     * Actualiza una tarea
+     * @param data tarea a actualizar
+     * @return la tarea actualizada
+     */
     public Task update(Task data) {
         Task result = getById(data.getName());
         if (result != null) {
@@ -89,7 +94,11 @@ public class Project implements IProject, Serializable {
         return result;
     }
 
-
+    /**
+     * Borrar una tarea
+     * @param taskName nombre de la tarea
+     * @return true si se ha podido borrar
+     */
     @Override
     public boolean deleteTask(String taskName){
         boolean taskDeleted = false;
@@ -102,6 +111,11 @@ public class Project implements IProject, Serializable {
         return taskDeleted;
     }
 
+    /**
+     * Obtiene una tarea por nombre
+     * @param nameTask nombre de la tarea
+     * @return la tarea encontrada
+     */
     @Override
     public Task getById(String nameTask) {
         Task foundTask = null;
@@ -113,6 +127,11 @@ public class Project implements IProject, Serializable {
         return foundTask;
     }
 
+    /**
+     * Cambia el estado de la tarea(Completado, pendiente, etc).
+     * @param nameTask nombre de la tarea
+     * @param state nuevo estado
+     */
     @Override
     public void changeTaskStatus(String nameTask, TaskState state){
         for (Task task : tasks) {
@@ -122,6 +141,11 @@ public class Project implements IProject, Serializable {
         }
     }
 
+    /**
+     * Añade un comentario a una tarea
+     * @param nameTask nombre de la tarea
+     * @param comment comentario
+     */
     @Override
     public void addComment(String nameTask, String comment){
         for (Task task : tasks) {
@@ -148,6 +172,11 @@ public class Project implements IProject, Serializable {
         return assignedUser;
     }
 
+    /**
+     * Si el usuario es creador de la tarea, devuelve true
+     * @param user Usuario
+     * @return true si es creador
+     */
     public boolean isCreator(User user) {
         return this.getProjectCreator().equals(user.getUsername());
     }
