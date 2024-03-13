@@ -57,8 +57,6 @@ public class RepoUserController implements IRepoUserController {
                 session.getLoggedInUser().getUsername().equals(userToUpdate.getUsername())) {
             userToUpdate.setName(newName);
             repoUser.update(userToUpdate);
-        } else {
-            MainView.showMessage("Solo el usuario puede modificar su nombre");
         }
         return userToUpdate;
     }

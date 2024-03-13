@@ -30,7 +30,8 @@ public class SubView {
         System.out.println("2. Cambiar nombre de usuario");
         System.out.println("3. Cambiar contraseña");
         System.out.println("4. Cambiar email");
-        System.out.println("5. Volver");
+        System.out.println("5. Borrar usuario");
+        System.out.println("6. Volver");
     }
 
     /**

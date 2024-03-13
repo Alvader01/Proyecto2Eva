@@ -161,14 +161,29 @@ public class SubController {
                         MainView.showMessage("El nuevo email es el mismo que tienes actualmente");
                     }
                     break;
+                case 5: // Eliminar usuario
+                    String usernameToDelete = session.getLoggedInUser().getUsername();
+                    String deleteUser = IO.readString("Introduce el nombre de usuario: ");
+                    if (usernameToDelete.equals(deleteUser)) {
+                        User user =userController.getUser(deleteUser);
+                        userController.deleteUser(user);
+                        MainView.showMessage("Usuario eliminado con éxito");
+                        saveAll();
+                        session.logout();
+                        stop();
+                        System.exit(0);
+                    } else {
+                        MainView.showMessage("Nombre de usuario incorrecto");
+                    }
+                    break;
             }
-        } while (option != 5);
+        } while (option != 6);
     }
 
     /**
      * Este menu es para modificar los proyectos.
      */
-    public void menuModifyProject() throws NoSuchAlgorithmException {
+    public void menuModifyProject() {
         int option;
         do {
             SubView.showGap();
@@ -239,7 +254,7 @@ public class SubController {
         } while (option != 5);
     }
 
-    public void menuManageTasks() throws NoSuchAlgorithmException {
+    public void menuManageTasks() {
         int option;
         do {
             SubView.showGap();
@@ -407,4 +422,14 @@ public class SubController {
         repoProject.save();
         repoUser.save();
     }
+
+    /**
+     * Para el programa y guarda.
+     */
+    public void stop(){
+        repoProject.save();
+        repoUser.save();
+        MainView.showMessage("ADIO");
+    }
+
 }

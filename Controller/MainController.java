@@ -43,20 +43,11 @@ public class MainController {
                     userController.createUser();
                     break;
                 case 3:
-                    stop();
+                    subController.stop();
                     break;
                 default:
                     System.out.println("Opción no valida");
             }
         } while (option != 3);
-    }
-
-    /**
-     * Para el programa y guarda.
-     */
-    public void stop(){
-        repoProject.save();
-        repoUser.save();
-        MainView.showMessage("ADIO");
     }
 }
